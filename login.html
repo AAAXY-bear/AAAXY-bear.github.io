@@ -89,15 +89,15 @@
         .image-carousel {
             display: flex;
             align-items: center;
-            gap: 40px;
+            gap: 50px;
             transition: transform 0.5s ease;
             width: fit-content;
             padding: 0 20px;
         }
 
         .carousel-item {
-            width: 500px;
-            height: 350px;
+            width: 600px;
+            height: 420px;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -173,33 +173,33 @@
             }
 
             .auth-bubble {
-                width: 220px;
-                padding: 25px 30px;
+                width: 280px;
+                padding: 30px 35px;
             }
 
             .carousel-item {
-                width: 350px;
-                height: 250px;
+                width: 400px;
+                height: 300px;
             }
 
             .image-carousel {
-                gap: 25px;
+                gap: 30px;
             }
         }
 
         @media (max-width: 480px) {
             .carousel-item {
-                width: 250px;
-                height: 180px;
+                width: 280px;
+                height: 200px;
             }
 
             .auth-bubble {
-                width: 180px;
-                padding: 20px 25px;
+                width: 200px;
+                padding: 25px 30px;
             }
 
             .image-carousel {
-                gap: 15px;
+                gap: 20px;
             }
         }
     </style>
@@ -307,8 +307,8 @@
                 itemWidth = 350;
                 gap = 25;
             } else {
-                itemWidth = 500;
-                gap = 40;
+                itemWidth = 600;
+                gap = 50;
             }
             
             // 计算偏移量，确保每次显示3个完整的图片
