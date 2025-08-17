@@ -79,12 +79,20 @@
             overflow: hidden;
         }
 
+        .carousel-wrapper {
+            width: 100%;
+            max-width: 1600px;
+            overflow: hidden;
+            position: relative;
+        }
+
         .image-carousel {
             display: flex;
             align-items: center;
             gap: 40px;
             transition: transform 0.5s ease;
             width: fit-content;
+            padding: 0 20px;
         }
 
         .carousel-item {
@@ -209,8 +217,9 @@
         </div>
     </div>
 
-            <!-- 图片轮播容器 -->
-        <div class="image-carousel-container">
+                <!-- 图片轮播容器 -->
+    <div class="image-carousel-container">
+        <div class="carousel-wrapper">
             <div class="image-carousel" id="imageCarousel">
                 <div class="carousel-item">
                     <img src="assets/images/slide1.jpeg" alt="图片1">
@@ -255,17 +264,18 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- 导航点 -->
-            <div class="carousel-nav" id="carouselNav">
-                <div class="nav-dot active" onclick="goToSlide(0)"></div>
-                <div class="nav-dot" onclick="goToSlide(1)"></div>
-                <div class="nav-dot" onclick="goToSlide(2)"></div>
-                <div class="nav-dot" onclick="goToSlide(3)"></div>
-                <div class="nav-dot" onclick="goToSlide(4)"></div>
-                <div class="nav-dot" onclick="goToSlide(5)"></div>
-            </div>
         </div>
+        
+        <!-- 导航点 -->
+        <div class="carousel-nav" id="carouselNav">
+            <div class="nav-dot active" onclick="goToSlide(0)"></div>
+            <div class="nav-dot" onclick="goToSlide(1)"></div>
+            <div class="nav-dot" onclick="goToSlide(2)"></div>
+            <div class="nav-dot" onclick="goToSlide(3)"></div>
+            <div class="nav-dot" onclick="goToSlide(4)"></div>
+            <div class="nav-dot" onclick="goToSlide(5)"></div>
+        </div>
+    </div>
 
     <script>
         let currentSlide = 0;
@@ -277,6 +287,12 @@
         // 自动轮播
         function autoSlide() {
             currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        // 手动跳转到指定幻灯片
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
             updateCarousel();
         }
 
@@ -295,7 +311,27 @@
                 gap = 40;
             }
             
-            const offset = -currentSlide * (itemWidth + gap);
+            // 计算偏移量，确保每次显示3个完整的图片
+            const totalWidth = itemWidth + gap;
+            
+            let offset;
+            if (currentSlide === 0) {
+                // 第一张图片，显示前3张
+                offset = 0;
+            } else if (currentSlide === 1) {
+                // 第二张图片，显示前3张
+                offset = 0;
+            } else if (currentSlide === totalSlides - 2) {
+                // 倒数第二张图片，显示最后3张
+                offset = -(totalSlides - 3) * totalWidth;
+            } else if (currentSlide === totalSlides - 1) {
+                // 最后一张图片，显示最后3张
+                offset = -(totalSlides - 3) * totalWidth;
+            } else {
+                // 中间的图片，居中显示当前图片
+                offset = -(currentSlide - 1) * totalWidth;
+            }
+            
             carousel.style.transform = `translateX(${offset}px)`;
             
             // 更新导航点
