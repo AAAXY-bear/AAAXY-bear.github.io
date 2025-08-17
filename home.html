@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AAAXY Bear的个人网站</title>
+    <title>"AI+HI"教育赋能乡村全面振兴</title>
     <style>
         * {
             margin: 0;
@@ -25,217 +25,170 @@
             padding: 20px;
         }
 
-        header {
-            background: rgba(255, 255, 255, 0.95);
+        /* 艺术字标题 */
+        .art-title {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* 标签容器 */
+        .tags-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        /* 标签样式 */
+        .tag {
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 200px;
         }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+        .tag:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 1);
         }
 
-        .logo {
-            font-size: 2em;
+        .tag h3 {
+            font-size: 1.8em;
             font-weight: bold;
             color: #333;
+            margin-bottom: 10px;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        nav a:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .main-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .welcome-section h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .welcome-section p {
-            font-size: 1.2em;
+        .tag p {
             color: #666;
-            margin-bottom: 30px;
+            font-size: 1em;
+            line-height: 1.4;
         }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .content-card {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .content-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .content-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .content-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .contact-info {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .contact-info h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        .contact-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .contact-links a {
-            color: #667eea;
-            text-decoration: none;
-            padding: 8px 16px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .contact-links a:hover {
-            background: #667eea;
-            color: white;
-        }
-
+        /* 退出登录按钮 */
         .logout-btn {
-            background: #dc3545;
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(220, 53, 69, 0.9);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .logout-btn:hover {
-            background: #c82333;
+            background: rgba(200, 35, 51, 1);
+            transform: translateY(-2px);
         }
 
+        /* 响应式设计 */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
+            .art-title {
+                font-size: 1.8em;
+                top: 20px;
+                left: 20px;
+            }
+
+            .tags-container {
                 gap: 20px;
+                padding: 0 20px;
             }
 
-            nav ul {
-                flex-direction: column;
-                text-align: center;
+            .tag {
+                padding: 20px 30px;
+                min-width: 180px;
             }
 
-            .welcome-section h1 {
-                font-size: 2em;
+            .tag h3 {
+                font-size: 1.5em;
+            }
+
+            .logout-btn {
+                top: 20px;
+                right: 20px;
+                padding: 10px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .art-title {
+                font-size: 1.4em;
+                top: 15px;
+                left: 15px;
+            }
+
+            .tags-container {
+                gap: 15px;
+            }
+
+            .tag {
+                padding: 15px 25px;
+                min-width: 160px;
+            }
+
+            .tag h3 {
+                font-size: 1.3em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <div class="logo">AAAXY Bear</div>
-                <nav>
-                    <ul>
-                        <li><a href="#home">首页</a></li>
-                        <li><a href="about.html">关于我</a></li>
-                        <li><a href="blog.html">博客</a></li>
-                        <li><a href="#contact">联系</a></li>
-                    </ul>
-                </nav>
-                <button class="logout-btn" onclick="logout()">退出登录</button>
-            </div>
-        </header>
+    <!-- 艺术字标题 -->
+    <div class="art-title">"AI+HI"教育赋能乡村全面振兴</div>
 
-        <div class="main-content">
-            <div class="welcome-section">
-                <h1>欢迎来到我的个人网站</h1>
-                <p>你好！我是 AAAXY Bear，欢迎来到我的个人网站。</p>
-            </div>
+    <!-- 退出登录按钮 -->
+    <button class="logout-btn" onclick="logout()">退出登录</button>
 
-            <div class="content-grid">
-                <div class="content-card">
-                    <h3>关于我</h3>
-                    <p>这里可以添加一些关于您自己的介绍，包括您的背景、技能、兴趣爱好等。</p>
-                </div>
-
-                <div class="content-card">
-                    <h3>最新文章</h3>
-                    <p>这里将显示您的最新博客文章。您可以在这里分享您的想法、经验和学习心得。</p>
-                </div>
-
-                <div class="content-card">
-                    <h3>项目展示</h3>
-                    <p>展示您的项目作品，分享您的技术成果和创意想法。</p>
-                </div>
-            </div>
-
-            <div class="contact-info">
-                <h3>联系方式</h3>
-                <div class="contact-links">
-                    <a href="https://github.com/aaaxy-bear" target="_blank">GitHub</a>
-                    <a href="mailto:your-email@example.com">Email</a>
-                    <a href="about.html">更多信息</a>
-                </div>
-            </div>
+    <!-- 标签容器 -->
+    <div class="tags-container">
+        <div class="tag" onclick="navigateTo('shiwu')">
+            <h3>识物知理</h3>
+            <p>探索自然奥秘，认知世界规律</p>
+        </div>
+        
+        <div class="tag" onclick="navigateTo('nongshi')">
+            <h3>农事探趣</h3>
+            <p>体验农耕文化，感受田园乐趣</p>
+        </div>
+        
+        <div class="tag" onclick="navigateTo('xiangtu')">
+            <h3>乡土印记</h3>
+            <p>传承乡土文化，铭记历史印记</p>
         </div>
     </div>
 
@@ -243,6 +196,21 @@
         function logout() {
             if (confirm('确定要退出登录吗？')) {
                 window.location.href = 'login.html';
+            }
+        }
+
+        function navigateTo(section) {
+            // 这里可以添加导航逻辑
+            switch(section) {
+                case 'shiwu':
+                    alert('识物知理功能开发中...');
+                    break;
+                case 'nongshi':
+                    alert('农事探趣功能开发中...');
+                    break;
+                case 'xiangtu':
+                    alert('乡土印记功能开发中...');
+                    break;
             }
         }
 
