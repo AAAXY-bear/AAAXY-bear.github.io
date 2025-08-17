@@ -25,43 +25,19 @@
             padding: 20px;
         }
 
-        /* 艺术字标题 */
-        .art-title {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            font-size: 2.2em;
-            font-weight: bold;
-            color: #2c3e50;
-            text-shadow: 
-                2px 2px 4px rgba(0, 0, 0, 0.5),
-                0 0 15px rgba(255, 255, 255, 0.9);
-            background: linear-gradient(45deg, #e74c3c, #3498db, #2ecc71, #f39c12, #9b59b6);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 4s ease-in-out infinite;
-            z-index: 10;
-            text-align: left;
-            line-height: 1.2;
-            max-width: 450px;
-        }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
 
         /* 标签容器 */
         .tags-container {
             position: absolute;
             top: 30px;
-            right: 30px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             flex-direction: row;
             gap: 20px;
             align-items: center;
+            justify-content: center;
         }
 
         /* 年龄分栏 */
@@ -350,11 +326,7 @@
     </style>
 </head>
 <body>
-    <!-- 艺术字标题 -->
-    <div class="art-title">
-        "AI+HI"教育赋能<br>
-        乡村全面振兴
-    </div>
+
 
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
@@ -377,19 +349,29 @@
 
     <!-- 标签容器 -->
     <div class="tags-container" id="mainMenu">
+        <div class="tag" onclick="navigateTo('xiangtu')">
+            <h3>乡土印记</h3>
+            <h5>人文历史类</h5>
+        </div>
+        
+        <div class="tag" onclick="navigateTo('qiaoshou')">
+            <h3>巧手算术</h3>
+            <h5>数据科学类</h5>
+        </div>
+        
         <div class="tag" onclick="navigateTo('shiwu')">
             <h3>识物知理</h3>
             <h5>物理科学类</h5>
         </div>
         
         <div class="tag" onclick="navigateTo('nongshi')">
-            <h3>农事探趣</h3>
-            <h5>农耕文化类</h5>
+            <h3>农事巧思</h3>
+            <h5>生物化学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('xiangtu')">
-            <h3>乡土印记</h3>
-            <h5>乡土文化类</h5>
+        <div class="tag" onclick="navigateTo('shuitu')">
+            <h3>水土密码</h3>
+            <h5>地理科学类</h5>
         </div>
     </div>
 
@@ -462,6 +444,70 @@
         function getVideosByCategoryAndAge(category, age) {
             // 模拟视频数据
             const videoData = {
+                xiangtu: {
+                    kindergarten: [
+                        { title: '家乡故事', description: '听爷爷奶奶讲述家乡的传说故事' },
+                        { title: '传统节日', description: '了解传统节日的由来和习俗' },
+                        { title: '民间艺术', description: '欣赏家乡的民间艺术形式' },
+                        { title: '家乡美食', description: '认识家乡的特色美食文化' }
+                    ],
+                    primary: [
+                        { title: '历史变迁', description: '了解家乡的历史发展过程' },
+                        { title: '民俗文化', description: '学习家乡的民俗文化传统' },
+                        { title: '建筑特色', description: '认识家乡的传统建筑风格' },
+                        { title: '方言文化', description: '学习家乡的方言和语言文化' }
+                    ],
+                    middle: [
+                        { title: '文化传承', description: '学习传统文化的传承和保护' },
+                        { title: '历史人物', description: '了解家乡的历史名人故事' },
+                        { title: '文化遗产', description: '认识家乡的文化遗产价值' },
+                        { title: '文化创新', description: '探索传统文化的创新发展' }
+                    ],
+                    high: [
+                        { title: '文化研究', description: '深入研究乡土文化的内涵' },
+                        { title: '文化保护', description: '学习文化遗产的保护方法' },
+                        { title: '文化传播', description: '了解文化传播的途径和方式' },
+                        { title: '文化发展', description: '探讨文化发展的方向和策略' }
+                    ],
+                    adult: [
+                        { title: '文化研究', description: '进行深入的乡土文化学术研究' },
+                        { title: '文化保护', description: '参与文化遗产的保护工作' },
+                        { title: '文化传播', description: '推动乡土文化的传播和发展' },
+                        { title: '文化创新', description: '探索文化创新的新路径' }
+                    ]
+                },
+                qiaoshou: {
+                    kindergarten: [
+                        { title: '数字游戏', description: '通过有趣的游戏学习基础数字概念' },
+                        { title: '形状认知', description: '认识各种几何形状和它们的特征' },
+                        { title: '简单计算', description: '学习基础的加减法运算' },
+                        { title: '模式识别', description: '发现和创造简单的数字模式' }
+                    ],
+                    primary: [
+                        { title: '数学思维', description: '培养逻辑思维和数学推理能力' },
+                        { title: '数据处理', description: '学习收集和整理数据的基本方法' },
+                        { title: '图表分析', description: '学会阅读和制作简单的图表' },
+                        { title: '概率统计', description: '了解基本的概率和统计概念' }
+                    ],
+                    middle: [
+                        { title: '算法思维', description: '学习基本的算法和编程思维' },
+                        { title: '数据分析', description: '掌握数据分析的基本技能' },
+                        { title: '机器学习', description: '了解机器学习的基本概念' },
+                        { title: '数据可视化', description: '学习数据可视化的方法和工具' }
+                    ],
+                    high: [
+                        { title: '高级算法', description: '深入学习算法设计和优化' },
+                        { title: '大数据分析', description: '掌握大数据处理和分析技术' },
+                        { title: '人工智能', description: '了解人工智能的发展和应用' },
+                        { title: '数据科学', description: '学习数据科学的理论和方法' }
+                    ],
+                    adult: [
+                        { title: '数据挖掘', description: '学习数据挖掘的高级技术' },
+                        { title: '深度学习', description: '掌握深度学习的理论和实践' },
+                        { title: '数据工程', description: '了解数据工程的设计和实现' },
+                        { title: '数据治理', description: '学习数据治理的策略和方法' }
+                    ]
+                },
                 shiwu: {
                     kindergarten: [
                         { title: '认识小动物', description: '通过有趣的动画了解各种小动物的特征和习性' },
