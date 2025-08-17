@@ -20,173 +20,309 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            overflow-x: hidden;
         }
 
-        .login-container {
+        .login-register-container {
+            position: absolute;
+            top: 33.33vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            z-index: 10;
+        }
+
+        .auth-bubble {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
+            padding: 30px 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
         }
 
-        .logo {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+        .auth-bubble:hover {
             background: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
-            transition: all 0.3s ease;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: #007bff;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+        .auth-bubble h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
         }
 
-        .login-btn:hover {
-            background: linear-gradient(135deg, #0056b3, #004085);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        .auth-bubble p {
+            color: #666;
+            font-size: 0.9em;
         }
 
-        .forgot-password {
-            margin-top: 15px;
-            text-align: center;
+        .image-carousel-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 66.67vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
-        .forgot-password a {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 14px;
+        .image-carousel {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.5s ease;
         }
 
-        .forgot-password a:hover {
-            text-decoration: underline;
+        .carousel-item {
+            width: 300px;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+            position: relative;
         }
 
-        .guest-login {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
-        .guest-btn {
-            background: transparent;
-            color: #007bff;
-            border: 2px solid #007bff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
+        .carousel-item:hover img {
+            transform: scale(1.05);
         }
 
-        .guest-btn:hover {
-            background: #007bff;
+        .carousel-item .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
             color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-item:hover .image-overlay {
+            transform: translateY(0);
+        }
+
+        .carousel-item h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .carousel-item p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .login-register-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .auth-bubble {
+                min-width: 200px;
+                padding: 25px 30px;
+            }
+
+            .carousel-item {
+                width: 250px;
+                height: 150px;
+            }
+
+            .image-carousel {
+                gap: 15px;
+            }
         }
 
         @media (max-width: 480px) {
-            .login-container {
-                margin: 20px;
-                padding: 30px 20px;
+            .carousel-item {
+                width: 200px;
+                height: 120px;
             }
-            
-            .logo {
-                font-size: 2em;
+
+            .auth-bubble {
+                min-width: 180px;
+                padding: 20px 25px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo">AAAXY Bear</div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">用户名</label>
-                <input type="text" id="username" name="username" required placeholder="请输入用户名">
+    <!-- 登录注册气泡 -->
+    <div class="login-register-container">
+        <div class="auth-bubble" onclick="showLogin()">
+            <h2>登录</h2>
+            <p>已有账号？点击登录</p>
+        </div>
+        <div class="auth-bubble" onclick="showRegister()">
+            <h2>注册</h2>
+            <p>新用户？点击注册</p>
+        </div>
+    </div>
+
+    <!-- 图片轮播容器 -->
+    <div class="image-carousel-container">
+        <div class="image-carousel" id="imageCarousel">
+            <div class="carousel-item">
+                <img src="assets/images/slide1.jpg" alt="图片1">
+                <div class="image-overlay">
+                    <h3>欢迎来到我的网站</h3>
+                    <p>探索更多精彩内容</p>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="password">密码</label>
-                <input type="password" id="password" name="password" required placeholder="请输入密码">
+            <div class="carousel-item">
+                <img src="assets/images/slide2.jpg" alt="图片2">
+                <div class="image-overlay">
+                    <h3>技术分享</h3>
+                    <p>分享最新的技术见解</p>
+                </div>
             </div>
-            
-            <button type="submit" class="login-btn">登录</button>
-        </form>
-        
-        <div class="forgot-password">
-            <a href="#" onclick="alert('请联系管理员重置密码')">忘记密码？</a>
+            <div class="carousel-item">
+                <img src="assets/images/slide3.jpg" alt="图片3">
+                <div class="image-overlay">
+                    <h3>项目展示</h3>
+                    <p>展示我的项目作品</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="assets/images/slide4.jpg" alt="图片4">
+                <div class="image-overlay">
+                    <h3>学习笔记</h3>
+                    <p>记录学习的心得体会</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="assets/images/slide5.jpg" alt="图片5">
+                <div class="image-overlay">
+                    <h3>生活点滴</h3>
+                    <p>分享生活的美好瞬间</p>
+                </div>
+            </div>
         </div>
         
-        <div class="guest-login">
-            <button class="guest-btn" onclick="window.location.href='index.html'">游客访问</button>
+        <!-- 导航点 -->
+        <div class="carousel-nav" id="carouselNav">
+            <div class="nav-dot active" onclick="goToSlide(0)"></div>
+            <div class="nav-dot" onclick="goToSlide(1)"></div>
+            <div class="nav-dot" onclick="goToSlide(2)"></div>
+            <div class="nav-dot" onclick="goToSlide(3)"></div>
+            <div class="nav-dot" onclick="goToSlide(4)"></div>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        let currentSlide = 0;
+        const totalSlides = 5;
+        const carousel = document.getElementById('imageCarousel');
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        // 自动轮播
+        function autoSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        // 更新轮播显示
+        function updateCarousel() {
+            const offset = -currentSlide * 320; // 300px宽度 + 20px间距
+            carousel.style.transform = `translateX(${offset}px)`;
             
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            // 更新导航点
+            navDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // 跳转到指定幻灯片
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+
+        // 显示登录界面
+        function showLogin() {
+            // 简单的登录逻辑示例
+            const username = prompt('请输入用户名：');
+            const password = prompt('请输入密码：');
             
-            // 这里可以添加实际的登录验证逻辑
-            // 目前只是一个示例，您可以根据需要修改
             if (username && password) {
-                // 模拟登录成功
+                // 这里可以添加实际的登录验证逻辑
                 alert('登录成功！');
-                window.location.href = 'index.html';
+                window.location.href = 'home.html';
             } else {
                 alert('请输入用户名和密码');
             }
+        }
+
+        // 显示注册界面
+        function showRegister() {
+            // 简单的注册逻辑示例
+            const username = prompt('请输入用户名：');
+            const password = prompt('请输入密码：');
+            const confirmPassword = prompt('请确认密码：');
+            
+            if (username && password && password === confirmPassword) {
+                alert('注册成功！');
+                window.location.href = 'home.html';
+            } else if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+            } else {
+                alert('请填写完整信息');
+            }
+        }
+
+        // 启动自动轮播
+        setInterval(autoSlide, 3000);
+
+        // 鼠标悬停时暂停轮播
+        carousel.addEventListener('mouseenter', () => {
+            clearInterval(autoSlide);
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            setInterval(autoSlide, 3000);
         });
     </script>
 </body>

@@ -42,6 +42,10 @@ exclude:
 include:
   - _pages
 
+# 设置默认首页为登录页面
+index_files:
+  - login.html
+
 # 集合设置
 collections:
   posts:
