@@ -43,7 +43,8 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 150px;
+            width: 180px;
+            flex-shrink: 0;
         }
 
         .auth-bubble:hover {
@@ -80,13 +81,14 @@
         .image-carousel {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
             transition: transform 0.5s ease;
+            width: fit-content;
         }
 
         .carousel-item {
-            width: 300px;
-            height: 200px;
+            width: 400px;
+            height: 280px;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -162,29 +164,33 @@
             }
 
             .auth-bubble {
-                min-width: 200px;
+                width: 200px;
                 padding: 25px 30px;
             }
 
             .carousel-item {
-                width: 250px;
-                height: 150px;
+                width: 280px;
+                height: 200px;
             }
 
             .image-carousel {
-                gap: 15px;
+                gap: 20px;
             }
         }
 
         @media (max-width: 480px) {
             .carousel-item {
-                width: 200px;
-                height: 120px;
+                width: 220px;
+                height: 160px;
             }
 
             .auth-bubble {
-                min-width: 180px;
+                width: 180px;
                 padding: 20px 25px;
+            }
+
+            .image-carousel {
+                gap: 15px;
             }
         }
     </style>
@@ -257,6 +263,7 @@
         const totalSlides = 5;
         const carousel = document.getElementById('imageCarousel');
         const navDots = document.querySelectorAll('.nav-dot');
+        let autoSlideInterval;
 
         // 自动轮播
         function autoSlide() {
@@ -266,7 +273,20 @@
 
         // 更新轮播显示
         function updateCarousel() {
-            const offset = -currentSlide * 320; // 300px宽度 + 20px间距
+            // 根据屏幕尺寸动态计算图片宽度和间距
+            let itemWidth, gap;
+            if (window.innerWidth <= 480) {
+                itemWidth = 220;
+                gap = 15;
+            } else if (window.innerWidth <= 768) {
+                itemWidth = 280;
+                gap = 20;
+            } else {
+                itemWidth = 400;
+                gap = 30;
+            }
+            
+            const offset = -currentSlide * (itemWidth + gap);
             carousel.style.transform = `translateX(${offset}px)`;
             
             // 更新导航点
@@ -314,16 +334,24 @@
         }
 
         // 启动自动轮播
-        setInterval(autoSlide, 3000);
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(autoSlide, 3000);
+        }
+
+        // 停止自动轮播
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
 
         // 鼠标悬停时暂停轮播
-        carousel.addEventListener('mouseenter', () => {
-            clearInterval(autoSlide);
-        });
+        carousel.addEventListener('mouseenter', stopAutoSlide);
+        carousel.addEventListener('mouseleave', startAutoSlide);
 
-        carousel.addEventListener('mouseleave', () => {
-            setInterval(autoSlide, 3000);
-        });
+        // 页面加载完成后启动轮播
+        window.addEventListener('load', startAutoSlide);
+
+        // 窗口大小改变时重新计算轮播位置
+        window.addEventListener('resize', updateCarousel);
     </script>
 </body>
 </html>
