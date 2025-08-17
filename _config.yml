@@ -1,0 +1,97 @@
+# Jekyll 网站配置文件
+# 网站基本信息
+title: AAAXY Bear的个人网站
+description: 欢迎来到我的个人网站
+author: AAAXY Bear
+email: your-email@example.com
+url: "https://aaaxy-bear.github.io"
+baseurl: ""
+
+# 社交媒体链接
+social:
+  github: aaaxy-bear
+  twitter: ""
+  linkedin: ""
+  email: ""
+
+# 网站设置
+lang: zh-CN
+timezone: Asia/Shanghai
+permalink: /:year/:month/:day/:title/
+relative_links:
+  enabled: true
+  collections: true
+
+# 插件设置
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# 包含文件
+include:
+  - _pages
+
+# 集合设置
+collections:
+  posts:
+    output: true
+    permalink: /:collection/:title/
+  pages:
+    output: true
+    permalink: /:title/
+
+# 默认设置
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "AAAXY Bear"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# 分页设置
+paginate: 5
+paginate_path: "/page/:num/"
+
+# 搜索引擎优化
+google_analytics: ""
+google_analytics_anonymize_ip: true
+
+# 评论系统（可选）
+disqus:
+  shortname: ""
+
+# 主题设置
+theme: minima
+minima:
+  social_links:
+    github: aaaxy-bear
+    twitter: ""
+    email: ""
+
+# 高亮代码设置
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+      start_line: 1
