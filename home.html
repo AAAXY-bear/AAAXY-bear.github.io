@@ -387,8 +387,17 @@
                 tag.classList.remove('active');
             });
             
-            // 清空视频内容
-            document.getElementById('videoGrid').innerHTML = '';
+            // 自动选择第一个年龄段（幼儿园）
+            const firstAgeTag = document.querySelector('.age-tag');
+            if (firstAgeTag) {
+                firstAgeTag.classList.add('active');
+                currentAge = 'kindergarten';
+            }
+            
+            // 加载对应分类和年龄段的视频内容
+            if (currentCategory && currentAge) {
+                loadVideos(currentCategory, currentAge);
+            }
         }
 
         function selectAge(age) {
