@@ -29,7 +29,8 @@
         .art-title {
             position: absolute;
             top: 30px;
-            left: 30px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 2.2em;
             font-weight: bold;
             color: #fff;
@@ -43,6 +44,8 @@
             background-clip: text;
             animation: gradientShift 4s ease-in-out infinite;
             z-index: 10;
+            text-align: center;
+            line-height: 1.2;
         }
 
         @keyframes gradientShift {
@@ -107,13 +110,9 @@
             left: 200px;
             right: 30px;
             bottom: 30px;
-            display: none;
+            display: flex;
             flex-direction: column;
             gap: 20px;
-        }
-
-        .video-section.active {
-            display: flex;
         }
 
         .video-grid {
@@ -167,30 +166,17 @@
             font-size: 0.95em;
         }
 
-        /* 返回按钮 */
-        .back-to-menu {
-            position: absolute;
-            top: 30px;
-            left: 200px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            display: none;
+        /* 标签选中状态 */
+        .tag.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .back-to-menu:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: translateY(-2px);
-        }
-
-        .back-to-menu.active {
-            display: block;
+        .tag.selected h3,
+        .tag.selected p {
+            color: white;
         }
 
         /* 标签样式 */
@@ -252,7 +238,6 @@
             .art-title {
                 font-size: 1.8em;
                 top: 20px;
-                left: 20px;
             }
 
             .tags-container {
@@ -296,17 +281,13 @@
                 gap: 20px;
             }
 
-            .back-to-menu {
-                left: 150px;
-                top: 20px;
-            }
+
         }
 
         @media (max-width: 480px) {
             .art-title {
                 font-size: 1.4em;
                 top: 15px;
-                left: 15px;
             }
 
             .tags-container {
@@ -350,33 +331,28 @@
                 font-size: 1.1em;
             }
 
-            .back-to-menu {
-                left: 120px;
-                top: 15px;
-                padding: 8px 15px;
-                font-size: 12px;
-            }
+
         }
     </style>
 </head>
 <body>
     <!-- 艺术字标题 -->
-    <div class="art-title">"AI+HI"教育赋能乡村全面振兴</div>
+    <div class="art-title">
+        "AI+HI"教育赋能<br>
+        乡村全面振兴
+    </div>
 
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
 
     <!-- 年龄分栏 -->
-    <div class="age-sidebar" id="ageSidebar" style="display: none;">
+    <div class="age-sidebar" id="ageSidebar">
         <div class="age-tag" onclick="selectAge('kindergarten')">幼儿园</div>
         <div class="age-tag" onclick="selectAge('primary')">小学</div>
         <div class="age-tag" onclick="selectAge('middle')">初中</div>
         <div class="age-tag" onclick="selectAge('high')">高中</div>
         <div class="age-tag" onclick="selectAge('adult')">18岁以上</div>
     </div>
-
-    <!-- 返回按钮 -->
-    <button class="back-to-menu" onclick="backToMenu()">返回菜单</button>
 
     <!-- 视频展示区域 -->
     <div class="video-section" id="videoSection">
@@ -415,17 +391,24 @@
 
         function navigateTo(section) {
             currentCategory = section;
-            // 隐藏主菜单，显示年龄分栏
-            document.getElementById('mainMenu').style.display = 'none';
-            document.getElementById('ageSidebar').style.display = 'flex';
-            document.querySelector('.back-to-menu').classList.add('active');
+            
+            // 更新分类标签的选中状态
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // 清除年龄标签的激活状态
+            document.querySelectorAll('.age-tag').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            
+            // 清空视频内容
+            document.getElementById('videoGrid').innerHTML = '';
         }
 
         function selectAge(age) {
             currentAge = age;
-            // 隐藏年龄分栏，显示视频区域
-            document.getElementById('ageSidebar').style.display = 'none';
-            document.getElementById('videoSection').classList.add('active');
             
             // 更新年龄标签的激活状态
             document.querySelectorAll('.age-tag').forEach(tag => {
@@ -433,25 +416,10 @@
             });
             event.target.classList.add('active');
             
-            // 加载对应分类和年龄的视频
-            loadVideos(currentCategory, currentAge);
-        }
-
-        function backToMenu() {
-            // 重置所有状态
-            currentCategory = '';
-            currentAge = '';
-            
-            // 显示主菜单，隐藏其他元素
-            document.getElementById('mainMenu').style.display = 'flex';
-            document.getElementById('ageSidebar').style.display = 'none';
-            document.getElementById('videoSection').classList.remove('active');
-            document.querySelector('.back-to-menu').classList.remove('active');
-            
-            // 清除年龄标签的激活状态
-            document.querySelectorAll('.age-tag').forEach(tag => {
-                tag.classList.remove('active');
-            });
+            // 如果有选择分类，则加载视频
+            if (currentCategory) {
+                loadVideos(currentCategory, currentAge);
+            }
         }
 
         function loadVideos(category, age) {
