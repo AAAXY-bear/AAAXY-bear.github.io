@@ -145,6 +145,59 @@
             background-color: rgba(0, 0, 0, 0.7);
         }
 
+        /* 确保视频控制按钮可见 */
+        video::-webkit-media-controls-play-button {
+            display: block !important;
+        }
+
+        video::-webkit-media-controls-pause-button {
+            display: block !important;
+        }
+
+        video::-webkit-media-controls-timeline {
+            display: block !important;
+        }
+
+        video::-webkit-media-controls-volume-slider {
+            display: block !important;
+        }
+
+        /* 通用视频控制样式 */
+        video {
+            cursor: pointer;
+        }
+
+        video::-webkit-media-controls-start-playback-button {
+            display: block !important;
+        }
+
+        /* 确保所有视频控制元素可见 */
+        video::-webkit-media-controls {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        video::-webkit-media-controls-panel {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* 鼠标悬停时显示控制条 */
+        video:hover::-webkit-media-controls {
+            opacity: 1 !important;
+        }
+
+        /* 非WebKit浏览器的视频控制样式 */
+        video::-moz-media-controls {
+            display: block !important;
+        }
+
+        video::-ms-media-controls {
+            display: block !important;
+        }
+
         .video-info {
             padding: 20px;
         }
