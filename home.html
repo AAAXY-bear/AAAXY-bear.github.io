@@ -114,18 +114,17 @@
 
 
 
-        /* 视频元素样式 */
-        .video-placeholder video {
+        /* 视频元素样式 - 使用默认样式 */
+        video {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
             border-radius: 15px 15px 0 0;
         }
 
-        /* 视频占位符样式 - 保持1280:720宽高比 */
+        /* 视频占位符样式 */
         .video-placeholder {
             width: 100%;
-            aspect-ratio: 16/9; /* 1280:720 = 16:9 */
+            aspect-ratio: 16/9;
             background: linear-gradient(135deg, #4CAF50, #2196F3);
             display: flex;
             align-items: center;
@@ -133,22 +132,6 @@
             color: white;
             font-size: 1.2em;
             font-weight: bold;
-            border-radius: 15px 15px 0 0;
-        }
-
-        /* 视频容器样式 */
-        .video-container {
-            width: 100%;
-            aspect-ratio: 16/9; /* 1280:720 = 16:9 */
-            border-radius: 15px 15px 0 0;
-            overflow: hidden;
-        }
-
-        /* 视频元素样式 */
-        .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
             border-radius: 15px 15px 0 0;
         }
 
@@ -462,7 +445,7 @@
                     if (index < videoFiles.length) {
                         videoItem.innerHTML = `
                             <div class="video-container">
-                                <video controls>
+                                <video controls preload="metadata" style="width: 100%; height: 100%;">
                                     <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
                                     您的浏览器不支持视频播放。
                                 </video>
