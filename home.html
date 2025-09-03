@@ -120,9 +120,6 @@
             height: 100%;
             object-fit: cover;
             border-radius: 15px 15px 0 0;
-            /* 强制显示控制按钮 */
-            --webkit-media-controls: display: flex !important;
-            --webkit-media-controls-panel: display: flex !important;
         }
 
         /* 视频占位符样式 - 保持1280:720宽高比 */
@@ -139,71 +136,13 @@
             border-radius: 15px 15px 0 0;
         }
 
-        /* 视频控制条样式 - 重新整理 */
-        video {
-            cursor: pointer;
-        }
-
-        /* WebKit浏览器视频控制样式 */
+        /* 视频控制条样式 - 使用默认样式 */
         video::-webkit-media-controls {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            background-color: rgba(0, 0, 0, 0.5) !important;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         video::-webkit-media-controls-panel {
-            display: flex !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            background-color: rgba(0, 0, 0, 0.7) !important;
-        }
-
-        video::-webkit-media-controls-play-button {
-            display: block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        video::-webkit-media-controls-pause-button {
-            display: block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        video::-webkit-media-controls-timeline {
-            display: block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        video::-webkit-media-controls-volume-slider {
-            display: block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        video::-webkit-media-controls-start-playback-button {
-            display: block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        /* 鼠标悬停时确保控制条可见 */
-        video:hover::-webkit-media-controls,
-        video:hover::-webkit-media-controls-panel {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-        /* Firefox浏览器视频控制样式 */
-        video::-moz-media-controls {
-            display: block !important;
-        }
-
-        /* IE/Edge浏览器视频控制样式 */
-        video::-ms-media-controls {
-            display: block !important;
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
         .video-info {
@@ -550,11 +489,7 @@
                         videoItem.appendChild(videoContainer);
                         videoItem.appendChild(videoInfo);
                         
-                        // 确保视频控制按钮可见
-                        videoElement.addEventListener('loadedmetadata', function() {
-                            this.style.setProperty('--webkit-media-controls', 'display: flex !important');
-                            this.style.setProperty('--webkit-media-controls-panel', 'display: flex !important');
-                        });
+
                         
                     } else {
                         // 如果视频文件不够，显示占位符
@@ -584,10 +519,7 @@
                 videoGrid.appendChild(videoItem);
             });
             
-            // 强制显示视频控制按钮
-            setTimeout(() => {
-                forceShowVideoControls();
-            }, 200);
+
         }
 
         function getVideosByCategoryAndAge(category, age) {
@@ -822,49 +754,11 @@
                     loadVideos(currentCategory, currentAge);
                 }
                 
-                // 启动定期检查视频控制按钮
-                checkAndForceVideoControls();
+
             }, 100);
         };
 
-        // 强制显示视频控制按钮的函数
-        function forceShowVideoControls() {
-            const videos = document.querySelectorAll('video');
-            videos.forEach(video => {
-                // 确保视频有controls属性
-                if (!video.hasAttribute('controls')) {
-                    video.setAttribute('controls', '');
-                }
-                
-                // 强制显示控制条
-                video.style.setProperty('--webkit-media-controls', 'display: flex !important');
-                video.style.setProperty('--webkit-media-controls-panel', 'display: flex !important');
-                
-                // 添加事件监听器确保控制按钮可见
-                video.addEventListener('loadedmetadata', function() {
-                    this.style.setProperty('--webkit-media-controls', 'display: flex !important');
-                    this.style.setProperty('--webkit-media-controls-panel', 'display: flex !important');
-                });
-                
-                // 添加更多事件监听器
-                video.addEventListener('canplay', function() {
-                    this.style.setProperty('--webkit-media-controls', 'display: flex !important');
-                    this.style.setProperty('--webkit-media-controls-panel', 'display: flex !important');
-                });
-                
-                video.addEventListener('play', function() {
-                    this.style.setProperty('--webkit-media-controls', 'display: flex !important');
-                    this.style.setProperty('--webkit-media-controls-panel', 'display: flex !important');
-                });
-            });
-        }
 
-        // 定期检查并强制显示视频控制按钮
-        function checkAndForceVideoControls() {
-            forceShowVideoControls();
-            // 每2秒检查一次
-            setTimeout(checkAndForceVideoControls, 2000);
-        }
     </script>
 </body>
 </html>
