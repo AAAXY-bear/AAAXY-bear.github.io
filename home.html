@@ -135,7 +135,12 @@
             border-radius: 15px 15px 0 0;
         }
 
-
+        /* 视频容器样式 - 只设置基本尺寸，不影响video控件 */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 15px 15px 0 0;
+        }
 
         .video-info {
             padding: 20px;
@@ -445,7 +450,7 @@
                     if (index < videoFiles.length) {
                         videoItem.innerHTML = `
                             <div class="video-container">
-                                <video controls preload="metadata" style="width: 100%; height: 100%;">
+                                <video controls>
                                     <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
                                     您的浏览器不支持视频播放。
                                 </video>
