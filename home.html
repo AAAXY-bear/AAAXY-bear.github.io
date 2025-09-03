@@ -138,11 +138,21 @@
 
         /* 视频控制条样式 - 使用默认样式 */
         video::-webkit-media-controls {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex !important;
         }
 
         video::-webkit-media-controls-panel {
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex !important;
+        }
+
+        /* 确保视频控制按钮可见 */
+        video::-webkit-media-controls-play-button,
+        video::-webkit-media-controls-pause-button,
+        video::-webkit-media-controls-timeline,
+        video::-webkit-media-controls-volume-slider {
+            display: block !important;
         }
 
         .video-info {
@@ -457,7 +467,7 @@
                         
                         // 创建视频元素
                         const videoElement = document.createElement('video');
-                        videoElement.controls = true;
+                        videoElement.setAttribute('controls', '');
                         videoElement.preload = 'metadata';
                         videoElement.style.objectFit = 'cover';
                         videoElement.style.width = '100%';
@@ -476,6 +486,13 @@
                         videoElement.appendChild(sourceElement);
                         videoElement.appendChild(fallbackText);
                         videoContainer.appendChild(videoElement);
+                        
+                        // 添加调试信息
+                        videoElement.addEventListener('loadedmetadata', function() {
+                            console.log('视频加载完成:', this.src);
+                            console.log('视频控制属性:', this.controls);
+                            console.log('视频元素:', this);
+                        });
                         
                         // 创建视频信息
                         const videoInfo = document.createElement('div');
