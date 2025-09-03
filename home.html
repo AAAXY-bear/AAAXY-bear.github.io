@@ -139,10 +139,35 @@
         /* 视频控制条样式 - 使用默认样式 */
         video::-webkit-media-controls {
             background-color: rgba(0, 0, 0, 0.3);
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         video::-webkit-media-controls-panel {
             background-color: rgba(0, 0, 0, 0.4);
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* 强制显示所有视频控制元素 */
+        video::-webkit-media-controls-play-button,
+        video::-webkit-media-controls-pause-button,
+        video::-webkit-media-controls-timeline,
+        video::-webkit-media-controls-volume-slider,
+        video::-webkit-media-controls-fullscreen-button {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* 确保视频控制条在所有情况下都可见 */
+        video:hover::-webkit-media-controls,
+        video:focus::-webkit-media-controls {
+            display: flex !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .video-info {
@@ -452,7 +477,7 @@
                     const videoFiles = ['a1_1.mp4', 'a1_2.mp4', 'a1_3.mp4', 'a1_4.mp4'];
                     if (index < videoFiles.length) {
                         videoItem.innerHTML = `
-                            <video controls class="video-placeholder">
+                            <video controls preload="metadata" class="video-placeholder">
                                 <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
                                 您的浏览器不支持视频播放。
                             </video>
@@ -461,6 +486,20 @@
                                 <div class="video-description">${video.description}</div>
                             </div>
                         `;
+                        
+                        // 添加调试信息
+                        setTimeout(() => {
+                            const video = videoItem.querySelector('video');
+                            if (video) {
+                                console.log('视频元素:', video);
+                                console.log('controls属性:', video.controls);
+                                console.log('视频源:', video.querySelector('source').src);
+                                
+                                // 强制显示控制按钮
+                                video.style.setProperty('--webkit-media-controls', 'display: flex !important');
+                                video.style.setProperty('--webkit-media-controls-panel', 'display: flex !important');
+                            }
+                        }, 100);
                     } else {
                         // 如果视频文件不够，显示占位符
                         videoItem.innerHTML = `
