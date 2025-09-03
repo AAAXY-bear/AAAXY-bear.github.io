@@ -348,11 +348,11 @@
 
     <!-- 年龄分栏 -->
     <div class="age-sidebar" id="ageSidebar">
-        <div class="age-tag" onclick="selectAge('kindergarten')">幼儿园</div>
-        <div class="age-tag" onclick="selectAge('primary')">小学</div>
-        <div class="age-tag" onclick="selectAge('middle')">初中</div>
-        <div class="age-tag" onclick="selectAge('high')">高中</div>
-        <div class="age-tag" onclick="selectAge('adult')">18岁以上</div>
+        <div class="age-tag" onclick="selectAge('kindergarten', event)">幼儿园</div>
+        <div class="age-tag" onclick="selectAge('primary', event)">小学</div>
+        <div class="age-tag" onclick="selectAge('middle', event)">初中</div>
+        <div class="age-tag" onclick="selectAge('high', event)">高中</div>
+        <div class="age-tag" onclick="selectAge('adult', event)">18岁以上</div>
     </div>
 
     <!-- 视频展示区域 -->
@@ -364,27 +364,27 @@
 
     <!-- 标签容器 -->
     <div class="tags-container" id="mainMenu">
-        <div class="tag" onclick="navigateTo('xiangtu')">
+        <div class="tag" onclick="navigateTo('xiangtu', event)">
             <h3>乡土印记</h3>
             <h5>人文历史类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('qiaoshou')">
+        <div class="tag" onclick="navigateTo('qiaoshou', event)">
             <h3>巧手算术</h3>
             <h5>数据科学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('shiwu')">
+        <div class="tag" onclick="navigateTo('shiwu', event)">
             <h3>识物知理</h3>
             <h5>物理科学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('nongshi')">
+        <div class="tag" onclick="navigateTo('nongshi', event)">
             <h3>农事巧思</h3>
             <h5>生物化学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('shuitu')">
+        <div class="tag" onclick="navigateTo('shuitu', event)">
             <h3>水土密码</h3>
             <h5>地理科学类</h5>
         </div>
@@ -400,7 +400,7 @@
         let currentCategory = '';
         let currentAge = '';
 
-        function navigateTo(section) {
+        function navigateTo(section, event) {
             currentCategory = section;
             
             // 更新分类标签的选中状态
@@ -427,7 +427,7 @@
             }
         }
 
-        function selectAge(age) {
+        function selectAge(age, event) {
             currentAge = age;
             
             // 更新年龄标签的激活状态
