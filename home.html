@@ -136,18 +136,16 @@
             border-radius: 15px 15px 0 0;
         }
 
-        /* 当包含视频时，使用block布局 */
-        .video-placeholder:has(video),
-        .video-placeholder video {
-            display: block;
-            background: none;
-            color: inherit;
-            font-size: inherit;
-            font-weight: inherit;
+        /* 视频容器样式 */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9; /* 1280:720 = 16:9 */
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
         }
 
         /* 视频元素样式 */
-        .video-placeholder video {
+        .video-container video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -463,10 +461,12 @@
                     const videoFiles = ['a1_1.mp4', 'a1_2.mp4', 'a1_3.mp4', 'a1_4.mp4'];
                     if (index < videoFiles.length) {
                         videoItem.innerHTML = `
-                            <video controls class="video-placeholder">
-                                <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
-                                您的浏览器不支持视频播放。
-                            </video>
+                            <div class="video-container">
+                                <video controls>
+                                    <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
+                                    您的浏览器不支持视频播放。
+                                </video>
+                            </div>
                             <div class="video-info">
                                 <div class="video-title">${video.title}</div>
                                 <div class="video-description">${video.description}</div>
