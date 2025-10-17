@@ -32,24 +32,7 @@
             pointer-events: none;
         }
 
-        /* 半透明logo平铺层（覆盖在渐变之上、内容之下） */
-        .logo-tile-layer {
-            position: fixed;
-            inset: 0;
-            background-image: url('assets/images/logo.jpg');
-            background-repeat: repeat;
-            background-size: 480px 480px; /* 4倍放大 */
-            background-position: 0 0;
-            opacity: 0.5; /* 50% 透明度 */
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* 确保主要内容在logo平铺层之上 */
-        .video-section,
-        .tags-container,
-        .left-sidebar,
-        .logout-btn { position: relative; z-index: 1; }
+        /* 移除背景平铺logo，仅保留左上角单个logo */
 
         /* 左上角站点 Logo（已不使用，可删除对应HTML） */
 
@@ -394,8 +377,7 @@
 <body>
 
 
-    <!-- 半透明logo平铺层 -->
-    <div class="logo-tile-layer"></div>
+    <!-- 背景平铺logo已移除，仅保留左上角logo -->
 
     <!-- 左上角站点 Logo -->
     <img class="site-logo" src="assets/images/logo.jpg" alt="站点Logo">
@@ -541,17 +523,15 @@
                                     nv.play().catch(() => {});
                                 });
                                 examBtn.addEventListener('click', () => {
-                                    // 用覆盖层方式嵌入外部网页，提供返回按钮
-                                    const overlay = document.createElement('div');
-                                    overlay.className = 'embed-overlay';
-                                    overlay.innerHTML = `
-                                        <button class="embed-back">返回视频教学</button>
-                                        <iframe class="embed-iframe" src="https://ks.wjx.com/vm/rEgVxLM.aspx#" allowfullscreen></iframe>
-                                    `;
-                                    document.body.appendChild(overlay);
-                                    overlay.querySelector('.embed-back').addEventListener('click', () => {
-                                        overlay.remove();
-                                    });
+                                    const url = 'https://ks.wjx.com/vm/rEgVxLM.aspx#';
+                                    try {
+                                        const win = window.open(url, '_blank', 'noopener');
+                                        if (!win) {
+                                            window.location.href = url;
+                                        }
+                                    } catch (e) {
+                                        window.location.href = url;
+                                    }
                                 });
                             });
                             return v;
@@ -578,7 +558,15 @@
                                     nv.play().catch(() => {});
                                 });
                                 examBtn.addEventListener('click', () => {
-                                    containerEl.innerHTML = `<div class="video-placeholder">测试（待建设）</div>`;
+                                    const url = 'https://ks.wjx.com/vm/rEgVxLM.aspx#';
+                                    try {
+                                        const win = window.open(url, '_blank', 'noopener');
+                                        if (!win) {
+                                            window.location.href = url;
+                                        }
+                                    } catch (e) {
+                                        window.location.href = url;
+                                    }
                                 });
                             });
                         }
