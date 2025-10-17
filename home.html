@@ -15,7 +15,7 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8f7c5 100%);
+            background: linear-gradient(135deg, #e8f5e9 0%, #b2f2bb 50%, #66bb6a 100%);
             min-height: 100vh;
         }
 
@@ -445,7 +445,7 @@
                     if (index < videoFiles.length) {
                         videoItem.innerHTML = `
                             <div class="video-container">
-                                <video controls>
+                                 <video controls preload="metadata" playsinline crossorigin="anonymous">
                                     <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
                                     您的浏览器不支持视频播放。
                                 </video>
