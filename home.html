@@ -15,41 +15,17 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #e8f5e9 0%, #b2f2bb 50%, #66bb6a 100%);
+            /* 顶层为logo平铺，其下为绿色渐变 */
+            background-image: url('assets/images/logo.jpg'), linear-gradient(135deg, #e8f5e9 0%, #b2f2bb 50%, #66bb6a 100%);
+            background-repeat: repeat, no-repeat;
+            background-size: 120px 120px, cover; /* 可按需调整单格大小 */
+            background-position: 0 0, center;
             min-height: 100vh;
         }
 
         /* 左上角站点 Logo（已不使用，可删除对应HTML） */
 
-        /* 多Logo“桌球式”层：覆盖于背景之上、内容之下 */
-        .logo-balls-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .logo-ball {
-            position: absolute;
-            width: 192px;             /* 放大为原来3倍 */
-            height: 192px;            /* 放大为原来3倍 */
-            border-radius: 50%;
-            overflow: hidden;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
-        }
-
-        .logo-ball img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* 内容层置于logo层之上 */
-        .video-section,
-        .tags-container,
-        .left-sidebar,
-        .logout-btn { position: relative; z-index: 1; }
+        /* 移除动画logo相关样式 */
 
         .container {
             max-width: 1200px;
@@ -170,6 +146,21 @@
 
         /* 确保视频元素不会超出容器 */
         .video-container video { width: 100%; height: auto; max-width: 100%; border-radius: 0; }
+
+        /* 视频结束后的操作按钮样式 */
+        .post-video-options { display: flex; align-items: center; justify-content: center; padding: 16px; }
+        .post-video-options .option-buttons { display: flex; gap: 12px; }
+        .post-video-options .option-buttons button {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .post-video-options .option-buttons button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
 
         .video-info {
             padding: 20px;
@@ -382,7 +373,6 @@
         <div class="video-grid" id="videoGrid">
             <!-- 视频内容将通过JavaScript动态生成 -->
         </div>
-        <div class="logo-balls-layer" id="logoBallsLayer"></div>
     </div>
 
     <!-- 顶部分类标签（视频学科分类） -->
@@ -468,14 +458,39 @@
                 if (category === 'xiangtu' && age === 'kindergarten') {
                     const videoFiles = ['a1_1.mp4', 'a1_2.mp4', 'a1_3.mp4', 'a1_4.mp4'];
                     if (index < videoFiles.length) {
+                        const containerId = `video_container_${index}_${Date.now()}`;
                         videoItem.innerHTML = `
-                            <div class="video-container">
+                            <div class="video-container" id="${containerId}">
                                 <video controls preload="metadata" playsinline crossorigin="anonymous">
                                     <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
                                     您的浏览器不支持视频播放。
                                 </video>
                             </div>
                         `;
+                        // 绑定播放结束事件
+                        const containerEl = videoItem.querySelector(`#${containerId}`);
+                        const videoEl = containerEl.querySelector('video');
+                        videoEl.addEventListener('ended', () => {
+                            // 在原区域显示两个选项
+                            containerEl.innerHTML = `
+                                <div class="post-video-options">
+                                    <div class="option-buttons">
+                                        <button data-action="replay">再看一遍</button>
+                                        <button data-action="exam">进入测试</button>
+                                    </div>
+                                </div>
+                            `;
+                            const replayBtn = containerEl.querySelector('button[data-action="replay"]');
+                            const examBtn = containerEl.querySelector('button[data-action="exam"]');
+                            replayBtn.addEventListener('click', () => {
+                                // 返回上一页（回到完整视频列表）
+                                window.history.back();
+                            });
+                            examBtn.addEventListener('click', () => {
+                                // 占位符：在原区域显示“测试（待建设）”
+                                containerEl.innerHTML = `<div class="video-placeholder">测试（待建设）</div>`;
+                            });
+                        });
                     } else {
                         // 如果视频文件不够，显示占位符
                         videoItem.innerHTML = `
@@ -710,66 +725,7 @@
             videoGrid.appendChild(placeholder);
         }
 
-        // 多Logo“桌球式”背景：创建与动画
-        (function initBouncingLogos() {
-            const layer = document.getElementById('logoBallsLayer');
-            if (!layer) return;
-
-            const num = 7; // 生成数量
-            const balls = [];
-            const minSize = 120; // 基于样式的3倍放大，设置更大的范围
-            const maxSize = 240;
-
-            // 随机工具
-            const rand = (a, b) => Math.random() * (b - a) + a;
-
-            // 初始化小球
-            for (let i = 0; i < num; i++) {
-                const size = Math.round(rand(minSize, maxSize));
-                const el = document.createElement('div');
-                el.className = 'logo-ball';
-                el.style.width = size + 'px';
-                el.style.height = size + 'px';
-                el.innerHTML = `<img src="assets/images/logo.jpg" alt="logo">`;
-                layer.appendChild(el);
-
-                balls.push({
-                    el,
-                    w: size,
-                    h: size,
-                    x: rand(0, layer.clientWidth - size),
-                    y: rand(0, layer.clientHeight - size),
-                    vx: rand(-0.7, 0.7) || 0.5,   // 避免0速度
-                    vy: rand(-0.7, 0.7) || 0.5
-                });
-            }
-
-            function step() {
-                const w = layer.clientWidth;
-                const h = layer.clientHeight;
-                for (const b of balls) {
-                    b.x += b.vx;
-                    b.y += b.vy;
-                    // 边界反弹
-                    if (b.x <= 0) { b.x = 0; b.vx = Math.abs(b.vx); }
-                    if (b.y <= 0) { b.y = 0; b.vy = Math.abs(b.vy); }
-                    if (b.x + b.w >= w) { b.x = w - b.w; b.vx = -Math.abs(b.vx); }
-                    if (b.y + b.h >= h) { b.y = h - b.h; b.vy = -Math.abs(b.vy); }
-                    b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
-                }
-                requestAnimationFrame(step);
-            }
-            requestAnimationFrame(step);
-
-            // 视窗变化时调整位置
-            window.addEventListener('resize', () => {
-                const w = layer.clientWidth, h = layer.clientHeight;
-                for (const b of balls) {
-                    if (b.x + b.w > w) b.x = Math.max(0, w - b.w);
-                    if (b.y + b.h > h) b.y = Math.max(0, h - b.h);
-                }
-            });
-        })();
+        // 已移除漂浮logo动画，改为背景平铺
 
         // 检查登录状态（这里可以添加实际的登录状态检查逻辑）
         function checkLoginStatus() {
