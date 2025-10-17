@@ -19,33 +19,24 @@
             min-height: 100vh;
         }
 
-        /* 左上角站点 Logo */
-        .site-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            z-index: 20;
-        }
+        /* 左上角站点 Logo（已不使用，可删除对应HTML） */
 
-        /* 多Logo“桌球式”背景层 */
+        /* 多Logo“桌球式”层：放在视频下方的独立区域 */
         .logo-balls-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 0;               /* 置于最底层背景上，但在body背景之上 */
-            pointer-events: none;      /* 不影响交互 */
+            position: relative;
+            width: 100%;
+            height: 360px;            /* 容器高度，可按需调整 */
+            margin-top: 10px;
+            pointer-events: none;
             overflow: hidden;
         }
 
         .logo-ball {
             position: absolute;
-            width: 64px;
-            height: 64px;
+            width: 192px;             /* 放大为原来3倍 */
+            height: 192px;            /* 放大为原来3倍 */
             border-radius: 50%;
             overflow: hidden;
-            opacity: 0.18;            /* 低不透明度，避免干扰内容 */
             filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
         }
 
@@ -133,6 +124,8 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px;
+            position: relative; /* 使其在同层内拥有更高叠放顺序 */
+            z-index: 1;
         }
 
         .video-item {
@@ -367,11 +360,7 @@
 <body>
 
 
-    <!-- 多Logo“桌球式”背景层 -->
-    <div class="logo-balls-layer" id="logoBallsLayer"></div>
-
-    <!-- 站点 Logo -->
-    <img class="site-logo" src="assets/images/logo.jpg" alt="站点Logo">
+    <!-- 顶部背景层移除；站点 Logo 也移除 -->
 
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
@@ -388,6 +377,7 @@
         <div class="video-grid" id="videoGrid">
             <!-- 视频内容将通过JavaScript动态生成 -->
         </div>
+        <div class="logo-balls-layer" id="logoBallsLayer"></div>
     </div>
 
     <!-- 顶部分类标签（视频学科分类） -->
@@ -722,8 +712,8 @@
 
             const num = 7; // 生成数量
             const balls = [];
-            const minSize = 40;
-            const maxSize = 84;
+            const minSize = 120; // 基于样式的3倍放大，设置更大的范围
+            const maxSize = 240;
 
             // 随机工具
             const rand = (a, b) => Math.random() * (b - a) + a;
@@ -742,16 +732,16 @@
                     el,
                     w: size,
                     h: size,
-                    x: rand(0, window.innerWidth - size),
-                    y: rand(0, window.innerHeight - size),
+                    x: rand(0, layer.clientWidth - size),
+                    y: rand(0, layer.clientHeight - size),
                     vx: rand(-0.7, 0.7) || 0.5,   // 避免0速度
                     vy: rand(-0.7, 0.7) || 0.5
                 });
             }
 
             function step() {
-                const w = window.innerWidth;
-                const h = window.innerHeight;
+                const w = layer.clientWidth;
+                const h = layer.clientHeight;
                 for (const b of balls) {
                     b.x += b.vx;
                     b.y += b.vy;
@@ -768,7 +758,7 @@
 
             // 视窗变化时调整位置
             window.addEventListener('resize', () => {
-                const w = window.innerWidth, h = window.innerHeight;
+                const w = layer.clientWidth, h = layer.clientHeight;
                 for (const b of balls) {
                     if (b.x + b.w > w) b.x = Math.max(0, w - b.w);
                     if (b.y + b.h > h) b.y = Math.max(0, h - b.h);
