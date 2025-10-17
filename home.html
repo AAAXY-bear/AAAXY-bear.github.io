@@ -20,6 +20,18 @@
             min-height: 100vh;
         }
 
+        /* 左上角站点 Logo */
+        .site-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            z-index: 2;
+            pointer-events: none;
+        }
+
         /* 半透明logo平铺层（覆盖在渐变之上、内容之下） */
         .logo-tile-layer {
             position: fixed;
@@ -177,6 +189,16 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .post-video-options .option-buttons button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+
+        /* 内嵌网页覆盖层 */
+        .embed-overlay { position: fixed; inset: 0; z-index: 9999; background: #000; }
+        .embed-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .embed-back {
+            position: absolute; top: 16px; left: 16px; z-index: 10000;
+            background: rgba(255,255,255,0.95); color: #333; border: none;
+            padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
 
         .video-info {
             padding: 20px;
@@ -375,6 +397,9 @@
     <!-- 半透明logo平铺层 -->
     <div class="logo-tile-layer"></div>
 
+    <!-- 左上角站点 Logo -->
+    <img class="site-logo" src="assets/images/logo.jpg" alt="站点Logo">
+
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
 
@@ -516,7 +541,17 @@
                                     nv.play().catch(() => {});
                                 });
                                 examBtn.addEventListener('click', () => {
-                                    containerEl.innerHTML = `<div class="video-placeholder">测试（待建设）</div>`;
+                                    // 用覆盖层方式嵌入外部网页，提供返回按钮
+                                    const overlay = document.createElement('div');
+                                    overlay.className = 'embed-overlay';
+                                    overlay.innerHTML = `
+                                        <button class="embed-back">返回视频教学</button>
+                                        <iframe class="embed-iframe" src="https://ks.wjx.com/vm/rEgVxLM.aspx#" allowfullscreen></iframe>
+                                    `;
+                                    document.body.appendChild(overlay);
+                                    overlay.querySelector('.embed-back').addEventListener('click', () => {
+                                        overlay.remove();
+                                    });
                                 });
                             });
                             return v;
