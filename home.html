@@ -102,7 +102,7 @@
         .video-item {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            overflow: hidden;
+            overflow: visible; /* 避免裁切原生控制条 */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
@@ -114,12 +114,8 @@
 
 
 
-        /* 视频元素样式 - 使用默认样式 */
-        video {
-            width: 100%;
-            height: auto;
-            border-radius: 15px 15px 0 0;
-        }
+        /* 视频元素样式 - 使用默认样式，避免限制控件显示 */
+        video { width: 100%; height: auto; border-radius: 15px 15px 0 0; }
 
         /* 视频占位符样式 */
         .video-placeholder {
@@ -136,20 +132,10 @@
         }
 
         /* 视频容器样式 - 只设置基本尺寸，不影响video控件 */
-        .video-container {
-            width: 100%;
-            max-width: 100%;
-            border-radius: 15px 15px 0 0;
-            overflow: visible;
-        }
+        .video-container { width: 100%; max-width: 100%; border-radius: 15px 15px 0 0; overflow: visible; }
 
         /* 确保视频元素不会超出容器 */
-        .video-container video {
-            width: 100%;
-            height: auto;
-            max-width: 100%;
-            border-radius: 15px 15px 0 0;
-        }
+        .video-container video { width: 100%; height: auto; max-width: 100%; border-radius: 15px 15px 0 0; }
 
         .video-info {
             padding: 20px;
