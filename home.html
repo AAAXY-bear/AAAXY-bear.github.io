@@ -26,7 +26,7 @@
             inset: 0;
             background-image: url('assets/images/logo.jpg');
             background-repeat: repeat;
-            background-size: 120px 120px; /* 可按需调整单位尺寸 */
+            background-size: 480px 480px; /* 4倍放大 */
             background-position: 0 0;
             opacity: 0.5; /* 50% 透明度 */
             pointer-events: none;
@@ -484,40 +484,69 @@
                                 </video>
                             </div>
                         `;
-                        // 绑定播放结束事件
                         const containerEl = videoItem.querySelector(`#${containerId}`);
-                        const videoEl = containerEl.querySelector('video');
-                        videoEl.addEventListener('ended', () => {
-                            // 在原区域显示两个选项
-                            const overlay = document.createElement('div');
-                            overlay.className = 'post-video-options';
-                            overlay.innerHTML = `
-                                <div class="option-buttons">
-                                    <button data-action="replay">再看一遍</button>
-                                    <button data-action="exam">进入测试</button>
-                                </div>
-                            `;
-                            containerEl.appendChild(overlay);
 
-                            const replayBtn = overlay.querySelector('button[data-action="replay"]');
-                            const examBtn = overlay.querySelector('button[data-action="exam"]');
-                            replayBtn.addEventListener('click', () => {
-                                // 重新载入同一视频并从头开始播放
-                                containerEl.innerHTML = `
-                                    <video controls preload="metadata" playsinline crossorigin="anonymous">
-                                        <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
-                                        您的浏览器不支持视频播放。
-                                    </video>
+                        // 封装：渲染视频并绑定 ended 逻辑
+                        const renderVideoWithEnded = () => {
+                            containerEl.innerHTML = `
+                                <video controls preload="metadata" playsinline crossorigin="anonymous">
+                                    <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
+                                    您的浏览器不支持视频播放。
+                                </video>
+                            `;
+                            const v = containerEl.querySelector('video');
+                            v.addEventListener('ended', () => {
+                                const overlay = document.createElement('div');
+                                overlay.className = 'post-video-options';
+                                overlay.innerHTML = `
+                                    <div class="option-buttons">
+                                        <button data-action="replay">再看一遍</button>
+                                        <button data-action="exam">进入测试</button>
+                                    </div>
                                 `;
-                                const v = containerEl.querySelector('video');
-                                v.currentTime = 0;
-                                v.play().catch(() => {});
+                                containerEl.appendChild(overlay);
+
+                                const replayBtn = overlay.querySelector('button[data-action="replay"]');
+                                const examBtn = overlay.querySelector('button[data-action="exam"]');
+                                replayBtn.addEventListener('click', () => {
+                                    // 重新渲染并从头播放，同时再次绑定 ended 逻辑
+                                    renderVideoWithEnded();
+                                    const nv = containerEl.querySelector('video');
+                                    nv.currentTime = 0;
+                                    nv.play().catch(() => {});
+                                });
+                                examBtn.addEventListener('click', () => {
+                                    containerEl.innerHTML = `<div class="video-placeholder">测试（待建设）</div>`;
+                                });
                             });
-                            examBtn.addEventListener('click', () => {
-                                // 占位符：在原区域显示“测试（待建设）”
-                                containerEl.innerHTML = `<div class="video-placeholder">测试（待建设）</div>`;
+                            return v;
+                        };
+
+                        // 首次渲染已包含 video，补绑定一次 ended 逻辑
+                        const initialVideo = containerEl.querySelector('video');
+                        if (initialVideo) {
+                            initialVideo.addEventListener('ended', () => {
+                                const overlay = document.createElement('div');
+                                overlay.className = 'post-video-options';
+                                overlay.innerHTML = `
+                                    <div class="option-buttons">
+                                        <button data-action=\"replay\">再看一遍</button>
+                                        <button data-action=\"exam\">进入测试</button>
+                                    </div>
+                                `;
+                                containerEl.appendChild(overlay);
+                                const replayBtn = overlay.querySelector('button[data-action="replay"]');
+                                const examBtn = overlay.querySelector('button[data-action="exam"]');
+                                replayBtn.addEventListener('click', () => {
+                                    const nv = renderVideoWithEnded();
+                                    nv.currentTime = 0;
+                                    nv.play().catch(() => {});
+                                });
+                                examBtn.addEventListener('click', () => {
+                                    containerEl.innerHTML = `<div class="video-placeholder">测试（待建设）</div>`;
+                                });
                             });
-                        });
+                        }
                     } else {
                         // 如果视频文件不够，显示占位符
                         videoItem.innerHTML = `
