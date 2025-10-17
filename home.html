@@ -21,12 +21,11 @@
 
         /* 左上角站点 Logo（已不使用，可删除对应HTML） */
 
-        /* 多Logo“桌球式”层：放在视频下方的独立区域 */
+        /* 多Logo“桌球式”层：覆盖于背景之上、内容之下 */
         .logo-balls-layer {
-            position: relative;
-            width: 100%;
-            height: 360px;            /* 容器高度，可按需调整 */
-            margin-top: 10px;
+            position: fixed;
+            inset: 0;
+            z-index: 0;
             pointer-events: none;
             overflow: hidden;
         }
@@ -45,6 +44,12 @@
             height: 100%;
             object-fit: cover;
         }
+
+        /* 内容层置于logo层之上 */
+        .video-section,
+        .tags-container,
+        .left-sidebar,
+        .logout-btn { position: relative; z-index: 1; }
 
         .container {
             max-width: 1200px;
