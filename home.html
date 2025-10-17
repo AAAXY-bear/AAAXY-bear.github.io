@@ -112,9 +112,19 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
+
+
+        /* 视频元素样式 - 使用默认样式 */
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* 视频占位符样式 */
         .video-placeholder {
             width: 100%;
-            height: 200px;
+            aspect-ratio: 16/9;
             background: linear-gradient(135deg, #4CAF50, #2196F3);
             display: flex;
             align-items: center;
@@ -122,6 +132,23 @@
             color: white;
             font-size: 1.2em;
             font-weight: bold;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* 视频容器样式 - 只设置基本尺寸，不影响video控件 */
+        .video-container {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 15px 15px 0 0;
+            overflow: visible;
+        }
+
+        /* 确保视频元素不会超出容器 */
+        .video-container video {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 15px 15px 0 0;
         }
 
         .video-info {
@@ -129,16 +156,16 @@
         }
 
         .video-title {
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: bold;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .video-description {
             color: #666;
-            line-height: 1.5;
-            font-size: 0.95em;
+            line-height: 1.4;
+            font-size: 0.85em;
         }
 
         /* 标签选中状态 */
@@ -298,7 +325,7 @@
             }
 
             .video-placeholder {
-                height: 150px;
+                aspect-ratio: 16/9; /* 保持1280:720宽高比 */
             }
 
             .video-info {
@@ -306,7 +333,7 @@
             }
 
             .video-title {
-                font-size: 1.1em;
+                font-size: 0.95em;
             }
 
 
@@ -335,27 +362,27 @@
 
     <!-- 顶部分类标签（视频学科分类） -->
     <div class="tags-container" id="mainMenu">
-        <div class="tag" onclick="navigateTo('xiangtu')">
+        <div class="tag" onclick="navigateTo('xiangtu', event)">
             <h3>乡土印记</h3>
             <h5>人文历史类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('qiaoshou')">
+        <div class="tag" onclick="navigateTo('qiaoshou', event)">
             <h3>巧手算术</h3>
             <h5>数据科学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('shiwu')">
+        <div class="tag" onclick="navigateTo('shiwu', event)">
             <h3>识物知理</h3>
             <h5>物理科学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('nongshi')">
+        <div class="tag" onclick="navigateTo('nongshi', event)">
             <h3>农事巧思</h3>
             <h5>生物化学类</h5>
         </div>
         
-        <div class="tag" onclick="navigateTo('shuitu')">
+        <div class="tag" onclick="navigateTo('shuitu', event)">
             <h3>水土密码</h3>
             <h5>地理科学类</h5>
         </div>
@@ -372,7 +399,7 @@
         let currentAge = '';
         let currentPanel = 'video';
 
-        function navigateTo(section) {
+        function navigateTo(section, event) {
             currentCategory = section;
             
             // 更新分类标签的选中状态
@@ -390,7 +417,7 @@
             }
         }
 
-        function switchPanel(panel) {
+        function switchPanel(panel, event) {
             currentPanel = panel;
             // 更新左侧菜单激活态
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
@@ -426,17 +453,52 @@
             videos.forEach((video, index) => {
                 const videoItem = document.createElement('div');
                 videoItem.className = 'video-item';
-                videoItem.innerHTML = `
-                    <div class="video-placeholder">
-                        视频 ${index + 1}
-                    </div>
-                    <div class="video-info">
-                        <div class="video-title">${video.title}</div>
-                        <div class="video-description">${video.description}</div>
-                    </div>
-                `;
+                
+                // 如果是幼儿园-乡土印记分类，使用实际视频文件
+                if (category === 'xiangtu' && age === 'kindergarten') {
+                    const videoFiles = ['a1_1.mp4', 'a1_2.mp4', 'a1_3.mp4', 'a1_4.mp4'];
+                    if (index < videoFiles.length) {
+                        videoItem.innerHTML = `
+                            <div class="video-container">
+                                <video controls>
+                                    <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
+                                    您的浏览器不支持视频播放。
+                                </video>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-title">${video.title}</div>
+                                <div class="video-description">${video.description}</div>
+                            </div>
+                        `;
+                    } else {
+                        // 如果视频文件不够，显示占位符
+                        videoItem.innerHTML = `
+                            <div class="video-placeholder">
+                                视频 ${index + 1}
+                            </div>
+                            <div class="video-info">
+                                <div class="video-title">${video.title}</div>
+                                <div class="video-description">${video.description}</div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // 其他分类和年龄段仍然使用占位符
+                    videoItem.innerHTML = `
+                        <div class="video-placeholder">
+                            视频 ${index + 1}
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${video.title}</div>
+                            <div class="video-description">${video.description}</div>
+                        </div>
+                    `;
+                }
+                
                 videoGrid.appendChild(videoItem);
             });
+            
+
         }
 
         function getVideosByCategoryAndAge(category, age) {
@@ -681,8 +743,12 @@
                 if (currentCategory && currentAge) {
                     loadVideos(currentCategory, currentAge);
                 }
+                
+
             }, 100);
         };
+
+
     </script>
 </body>
 </html>
