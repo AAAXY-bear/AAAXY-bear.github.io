@@ -30,6 +30,31 @@
             z-index: 20;
         }
 
+        /* 多Logo“桌球式”背景层 */
+        .logo-balls-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;               /* 置于最底层背景上，但在body背景之上 */
+            pointer-events: none;      /* 不影响交互 */
+            overflow: hidden;
+        }
+
+        .logo-ball {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            opacity: 0.18;            /* 低不透明度，避免干扰内容 */
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+        }
+
+        .logo-ball img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -341,6 +366,9 @@
 </head>
 <body>
 
+
+    <!-- 多Logo“桌球式”背景层 -->
+    <div class="logo-balls-layer" id="logoBallsLayer"></div>
 
     <!-- 站点 Logo -->
     <img class="site-logo" src="assets/images/logo.jpg" alt="站点Logo">
@@ -686,6 +714,67 @@
             `;
             videoGrid.appendChild(placeholder);
         }
+
+        // 多Logo“桌球式”背景：创建与动画
+        (function initBouncingLogos() {
+            const layer = document.getElementById('logoBallsLayer');
+            if (!layer) return;
+
+            const num = 7; // 生成数量
+            const balls = [];
+            const minSize = 40;
+            const maxSize = 84;
+
+            // 随机工具
+            const rand = (a, b) => Math.random() * (b - a) + a;
+
+            // 初始化小球
+            for (let i = 0; i < num; i++) {
+                const size = Math.round(rand(minSize, maxSize));
+                const el = document.createElement('div');
+                el.className = 'logo-ball';
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.innerHTML = `<img src="assets/images/logo.jpg" alt="logo">`;
+                layer.appendChild(el);
+
+                balls.push({
+                    el,
+                    w: size,
+                    h: size,
+                    x: rand(0, window.innerWidth - size),
+                    y: rand(0, window.innerHeight - size),
+                    vx: rand(-0.7, 0.7) || 0.5,   // 避免0速度
+                    vy: rand(-0.7, 0.7) || 0.5
+                });
+            }
+
+            function step() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                for (const b of balls) {
+                    b.x += b.vx;
+                    b.y += b.vy;
+                    // 边界反弹
+                    if (b.x <= 0) { b.x = 0; b.vx = Math.abs(b.vx); }
+                    if (b.y <= 0) { b.y = 0; b.vy = Math.abs(b.vy); }
+                    if (b.x + b.w >= w) { b.x = w - b.w; b.vx = -Math.abs(b.vx); }
+                    if (b.y + b.h >= h) { b.y = h - b.h; b.vy = -Math.abs(b.vy); }
+                    b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
+                }
+                requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+
+            // 视窗变化时调整位置
+            window.addEventListener('resize', () => {
+                const w = window.innerWidth, h = window.innerHeight;
+                for (const b of balls) {
+                    if (b.x + b.w > w) b.x = Math.max(0, w - b.w);
+                    if (b.y + b.h > h) b.y = Math.max(0, h - b.h);
+                }
+            });
+        })();
 
         // 检查登录状态（这里可以添加实际的登录状态检查逻辑）
         function checkLoginStatus() {
