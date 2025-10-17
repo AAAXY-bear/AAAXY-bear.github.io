@@ -15,13 +15,29 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            /* 顶层为logo平铺，其下为绿色渐变 */
-            background-image: url('assets/images/logo.jpg'), linear-gradient(135deg, #e8f5e9 0%, #b2f2bb 50%, #66bb6a 100%);
-            background-repeat: repeat, no-repeat;
-            background-size: 120px 120px, cover; /* 可按需调整单格大小 */
-            background-position: 0 0, center;
+            /* 底层绿色渐变背景 */
+            background: linear-gradient(135deg, #e8f5e9 0%, #b2f2bb 50%, #66bb6a 100%);
             min-height: 100vh;
         }
+
+        /* 半透明logo平铺层（覆盖在渐变之上、内容之下） */
+        .logo-tile-layer {
+            position: fixed;
+            inset: 0;
+            background-image: url('assets/images/logo.jpg');
+            background-repeat: repeat;
+            background-size: 120px 120px; /* 可按需调整单位尺寸 */
+            background-position: 0 0;
+            opacity: 0.5; /* 50% 透明度 */
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 确保主要内容在logo平铺层之上 */
+        .video-section,
+        .tags-container,
+        .left-sidebar,
+        .logout-btn { position: relative; z-index: 1; }
 
         /* 左上角站点 Logo（已不使用，可删除对应HTML） */
 
@@ -147,9 +163,9 @@
         /* 确保视频元素不会超出容器 */
         .video-container video { width: 100%; height: auto; max-width: 100%; border-radius: 0; }
 
-        /* 视频结束后的操作按钮样式 */
-        .post-video-options { display: flex; align-items: center; justify-content: center; padding: 16px; }
-        .post-video-options .option-buttons { display: flex; gap: 12px; }
+        /* 视频结束后的操作按钮样式：覆盖在视频容器正中 */
+        .post-video-options { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+        .post-video-options .option-buttons { display: flex; gap: 12px; background: rgba(0,0,0,0.35); padding: 12px 16px; border-radius: 10px; }
         .post-video-options .option-buttons button {
             background: linear-gradient(135deg, #4CAF50, #2196F3);
             color: #fff;
@@ -356,7 +372,8 @@
 <body>
 
 
-    <!-- 顶部背景层移除；站点 Logo 也移除 -->
+    <!-- 半透明logo平铺层 -->
+    <div class="logo-tile-layer"></div>
 
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
@@ -460,7 +477,7 @@
                     if (index < videoFiles.length) {
                         const containerId = `video_container_${index}_${Date.now()}`;
                         videoItem.innerHTML = `
-                            <div class="video-container" id="${containerId}">
+                            <div class="video-container" id="${containerId}" style="position: relative;">
                                 <video controls preload="metadata" playsinline crossorigin="anonymous">
                                     <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
                                     您的浏览器不支持视频播放。
@@ -472,19 +489,29 @@
                         const videoEl = containerEl.querySelector('video');
                         videoEl.addEventListener('ended', () => {
                             // 在原区域显示两个选项
-                            containerEl.innerHTML = `
-                                <div class="post-video-options">
-                                    <div class="option-buttons">
-                                        <button data-action="replay">再看一遍</button>
-                                        <button data-action="exam">进入测试</button>
-                                    </div>
+                            const overlay = document.createElement('div');
+                            overlay.className = 'post-video-options';
+                            overlay.innerHTML = `
+                                <div class="option-buttons">
+                                    <button data-action="replay">再看一遍</button>
+                                    <button data-action="exam">进入测试</button>
                                 </div>
                             `;
-                            const replayBtn = containerEl.querySelector('button[data-action="replay"]');
-                            const examBtn = containerEl.querySelector('button[data-action="exam"]');
+                            containerEl.appendChild(overlay);
+
+                            const replayBtn = overlay.querySelector('button[data-action="replay"]');
+                            const examBtn = overlay.querySelector('button[data-action="exam"]');
                             replayBtn.addEventListener('click', () => {
-                                // 返回上一页（回到完整视频列表）
-                                window.history.back();
+                                // 重新载入同一视频并从头开始播放
+                                containerEl.innerHTML = `
+                                    <video controls preload="metadata" playsinline crossorigin="anonymous">
+                                        <source src="assets/videos/${videoFiles[index]}" type="video/mp4">
+                                        您的浏览器不支持视频播放。
+                                    </video>
+                                `;
+                                const v = containerEl.querySelector('video');
+                                v.currentTime = 0;
+                                v.play().catch(() => {});
                             });
                             examBtn.addEventListener('click', () => {
                                 // 占位符：在原区域显示“测试（待建设）”
