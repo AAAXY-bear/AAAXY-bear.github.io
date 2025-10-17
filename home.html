@@ -15,7 +15,7 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #a8e6cf 0%, #87ceeb 100%);
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8f7c5 100%);
             min-height: 100vh;
         }
 
@@ -40,8 +40,8 @@
             justify-content: center;
         }
 
-        /* 年龄分栏 */
-        .age-sidebar {
+        /* 左侧栏目 */
+        .left-sidebar {
             position: fixed;
             left: 30px;
             top: 50%;
@@ -52,11 +52,11 @@
             z-index: 5;
         }
 
-        .age-tag {
-            background: rgba(255, 255, 255, 0.8);
+        .menu-item {
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             border-radius: 10px;
-            padding: 15px 20px;
+            padding: 14px 18px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
@@ -64,15 +64,15 @@
             text-align: center;
             font-weight: 600;
             color: #333;
-            min-width: 100px;
+            min-width: 110px;
         }
 
-        .age-tag:hover {
+        .menu-item:hover {
             background: rgba(255, 255, 255, 1);
             transform: translateX(5px);
         }
 
-        .age-tag.active {
+        .menu-item.active {
             background: linear-gradient(135deg, #4CAF50, #2196F3);
             color: white;
             transform: translateX(5px);
@@ -236,14 +236,14 @@
                 padding: 10px 16px;
             }
 
-            .age-sidebar {
+            .left-sidebar {
                 left: 20px;
                 gap: 10px;
             }
 
-            .age-tag {
+            .menu-item {
                 padding: 12px 15px;
-                min-width: 80px;
+                min-width: 90px;
                 font-size: 0.9em;
             }
 
@@ -281,15 +281,15 @@
                 font-size: 0.7em;
             }
 
-            .age-sidebar {
+            .left-sidebar {
                 left: 15px;
                 gap: 8px;
             }
 
-            .age-tag {
+            .menu-item {
                 padding: 10px 12px;
-                min-width: 70px;
-                font-size: 0.8em;
+                min-width: 80px;
+                font-size: 0.85em;
             }
 
             .video-section {
@@ -319,13 +319,11 @@
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
 
-    <!-- 年龄分栏 -->
-    <div class="age-sidebar" id="ageSidebar">
-        <div class="age-tag" onclick="selectAge('kindergarten')">幼儿园</div>
-        <div class="age-tag" onclick="selectAge('primary')">小学</div>
-        <div class="age-tag" onclick="selectAge('middle')">初中</div>
-        <div class="age-tag" onclick="selectAge('high')">高中</div>
-        <div class="age-tag" onclick="selectAge('adult')">18岁以上</div>
+    <!-- 左侧栏目 -->
+    <div class="left-sidebar" id="leftSidebar">
+        <div class="menu-item active" onclick="switchPanel('video')">教学视频</div>
+        <div class="menu-item" onclick="switchPanel('exam')">课堂检测</div>
+        <div class="menu-item" onclick="switchPanel('feedback')">课后反馈</div>
     </div>
 
     <!-- 视频展示区域 -->
@@ -335,7 +333,7 @@
         </div>
     </div>
 
-    <!-- 标签容器 -->
+    <!-- 顶部分类标签（视频学科分类） -->
     <div class="tags-container" id="mainMenu">
         <div class="tag" onclick="navigateTo('xiangtu')">
             <h3>乡土印记</h3>
@@ -372,6 +370,7 @@
 
         let currentCategory = '';
         let currentAge = '';
+        let currentPanel = 'video';
 
         function navigateTo(section) {
             currentCategory = section;
@@ -382,36 +381,38 @@
             });
             event.currentTarget.classList.add('selected');
             
-            // 清除年龄标签的激活状态
-            document.querySelectorAll('.age-tag').forEach(tag => {
-                tag.classList.remove('active');
-            });
-            
-            // 自动选择第一个年龄段（幼儿园）
-            const firstAgeTag = document.querySelector('.age-tag');
-            if (firstAgeTag) {
-                firstAgeTag.classList.add('active');
-                currentAge = 'kindergarten';
-            }
-            
-            // 加载对应分类和年龄段的视频内容
-            if (currentCategory && currentAge) {
+            // 面板逻辑：教学视频默认使用“幼儿园”
+            currentAge = 'kindergarten';
+            if (currentPanel === 'video' && currentCategory && currentAge) {
                 loadVideos(currentCategory, currentAge);
+            } else {
+                renderEmptyPanel();
             }
         }
 
-        function selectAge(age) {
-            currentAge = age;
-            
-            // 更新年龄标签的激活状态
-            document.querySelectorAll('.age-tag').forEach(tag => {
-                tag.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 如果有选择分类，则加载视频
-            if (currentCategory) {
-                loadVideos(currentCategory, currentAge);
+        function switchPanel(panel) {
+            currentPanel = panel;
+            // 更新左侧菜单激活态
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            const clicked = event.currentTarget;
+            if (clicked) clicked.classList.add('active');
+
+            if (currentPanel === 'video') {
+                // 视频面板：使用当前分类 + 默认幼儿园
+                if (!currentAge) currentAge = 'kindergarten';
+                if (currentCategory && currentAge) {
+                    loadVideos(currentCategory, currentAge);
+                } else {
+                    // 若未选择分类，则默认选择第一个分类
+                    const firstTag = document.querySelector('.tag');
+                    if (firstTag) {
+                        firstTag.classList.add('selected');
+                        currentCategory = firstTag.getAttribute('onclick').match(/navigateTo\('(.+?)'\)/)?.[1] || 'xiangtu';
+                        loadVideos(currentCategory, 'kindergarten');
+                    }
+                }
+            } else {
+                renderEmptyPanel();
             }
         }
 
@@ -638,6 +639,17 @@
             return videoData[category]?.[age] || [];
         }
 
+        function renderEmptyPanel() {
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = '';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'video-item';
+            placeholder.innerHTML = `
+                <div class="video-placeholder">${currentPanel === 'exam' ? '课堂检测（待建设）' : '课后反馈（待建设）'}</div>
+            `;
+            videoGrid.appendChild(placeholder);
+        }
+
         // 检查登录状态（这里可以添加实际的登录状态检查逻辑）
         function checkLoginStatus() {
             // 这里可以添加检查用户是否已登录的逻辑
@@ -649,8 +661,12 @@
         window.onload = function() {
             checkLoginStatus();
             
-            // 默认选择第一个分类和第一个年龄段
+            // 默认选择：左侧为教学视频；选择第一个分类；年龄默认为幼儿园
             setTimeout(() => {
+                // 左侧菜单默认激活“教学视频”
+                const firstMenu = document.querySelector('.menu-item');
+                if (firstMenu) firstMenu.classList.add('active');
+
                 // 选择第一个分类
                 const firstTag = document.querySelector('.tag');
                 if (firstTag) {
@@ -658,12 +674,8 @@
                     currentCategory = 'xiangtu';
                 }
                 
-                // 选择第一个年龄段
-                const firstAgeTag = document.querySelector('.age-tag');
-                if (firstAgeTag) {
-                    firstAgeTag.classList.add('active');
-                    currentAge = 'kindergarten';
-                }
+                // 年龄不再显示，但逻辑默认幼儿园
+                currentAge = 'kindergarten';
                 
                 // 加载默认视频
                 if (currentCategory && currentAge) {
