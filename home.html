@@ -19,6 +19,17 @@
             min-height: 100vh;
         }
 
+        /* 左上角站点 Logo */
+        .site-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            z-index: 20;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -223,6 +234,10 @@
 
         /* 响应式设计 */
         @media (max-width: 768px) {
+            .site-logo {
+                width: 42px;
+                height: 42px;
+            }
             .tags-container {
                 top: 20px;
                 left: 50%;
@@ -274,6 +289,10 @@
         }
 
         @media (max-width: 480px) {
+            .site-logo {
+                width: 36px;
+                height: 36px;
+            }
             .tags-container {
                 top: 15px;
                 left: 50%;
@@ -328,6 +347,9 @@
 </head>
 <body>
 
+
+    <!-- 站点 Logo -->
+    <img class="site-logo" src="assets/images/logo.jpg" alt="站点Logo">
 
     <!-- 退出登录按钮 -->
     <button class="logout-btn" onclick="logout()">退出登录</button>
