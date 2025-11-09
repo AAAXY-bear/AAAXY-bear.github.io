@@ -499,6 +499,30 @@
         }
 
         function switchPanel(panel, element) {
+            // 如果即将切换到 feedback，先保存当前面板状态
+            if (panel === 'feedback') {
+                // 获取当前实际选中的面板（在点击feedback之前的面板）
+                const menuItems = document.querySelectorAll('.menu-item');
+                let actualCurrentPanel = 'video';
+                menuItems.forEach((item, index) => {
+                    if (item.classList.contains('active')) {
+                        actualCurrentPanel = index === 0 ? 'video' : (index === 1 ? 'exam' : 'feedback');
+                    }
+                });
+                // 保存实际当前面板状态（确保不是feedback）
+                if (actualCurrentPanel !== 'feedback') {
+                    sessionStorage.setItem('previousPanel', actualCurrentPanel);
+                } else {
+                    sessionStorage.setItem('previousPanel', 'video');
+                }
+                // 保存当前分类状态
+                if (currentCategory) {
+                    sessionStorage.setItem('previousCategory', currentCategory);
+                }
+                // 标记即将跳转到反馈页面
+                sessionStorage.setItem('isNavigatingToFeedback', 'true');
+            }
+            
             currentPanel = panel;
             // 更新左侧菜单激活态
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
@@ -522,7 +546,7 @@
                     }
                 }
             } else if (currentPanel === 'feedback') {
-                // 课后反馈：直接跳转到反馈问卷页面
+                // 课后反馈：直接跳转到反馈问卷页面（状态已在函数开始时保存）
                 window.location.href = 'https://v.wjx.cn/vm/YfpTWhN.aspx#';
             } else if (currentPanel === 'exam') {
                 // 课堂检测：根据当前分类显示对应的测试链接
@@ -999,29 +1023,90 @@
         window.onload = function() {
             checkLoginStatus();
             
-            // 默认选择：左侧为教学视频；选择第一个分类；年龄默认为幼儿园
-            setTimeout(() => {
-                // 左侧菜单默认激活“教学视频”
-                const firstMenu = document.querySelector('.menu-item');
-                if (firstMenu) firstMenu.classList.add('active');
-
-                // 选择第一个分类
-                const firstTag = document.querySelector('.tag');
-                if (firstTag) {
-                    firstTag.classList.add('selected');
-                    currentCategory = 'xiangtu';
+            // 检查是否是从反馈页面返回的
+            const wasNavigatingToFeedback = sessionStorage.getItem('isNavigatingToFeedback');
+            const previousPanel = sessionStorage.getItem('previousPanel');
+            
+            if (wasNavigatingToFeedback === 'true' && previousPanel) {
+                // 从反馈页面返回，恢复之前的面板状态
+                sessionStorage.removeItem('isNavigatingToFeedback');
+                const previousCategory = sessionStorage.getItem('previousCategory');
+                sessionStorage.removeItem('previousPanel');
+                sessionStorage.removeItem('previousCategory');
+                
+                // 恢复之前的面板
+                currentPanel = previousPanel;
+                const menuItems = document.querySelectorAll('.menu-item');
+                menuItems.forEach((item, index) => {
+                    item.classList.remove('active');
+                    if ((previousPanel === 'video' && index === 0) ||
+                        (previousPanel === 'exam' && index === 1) ||
+                        (previousPanel === 'feedback' && index === 2)) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // 恢复分类标签的选中状态
+                if (previousCategory) {
+                    currentCategory = previousCategory;
+                    document.querySelectorAll('.tag').forEach(tag => {
+                        tag.classList.remove('selected');
+                        const onclickAttr = tag.getAttribute('onclick');
+                        if (onclickAttr && onclickAttr.includes(`'${previousCategory}'`)) {
+                            tag.classList.add('selected');
+                        }
+                    });
                 }
                 
-                // 年龄不再显示，但逻辑默认幼儿园
-                currentAge = 'kindergarten';
-                
-                // 加载默认视频
-                if (currentCategory && currentAge) {
-                    loadVideos(currentCategory, currentAge);
+                // 根据恢复的面板加载内容
+                if (previousPanel === 'video') {
+                    currentAge = 'kindergarten';
+                    if (!currentCategory) {
+                        const firstTag = document.querySelector('.tag');
+                        if (firstTag) {
+                            firstTag.classList.add('selected');
+                            currentCategory = 'xiangtu';
+                        }
+                    }
+                    if (currentCategory && currentAge) {
+                        loadVideos(currentCategory, currentAge);
+                    }
+                } else if (previousPanel === 'exam') {
+                    if (currentCategory) {
+                        renderExamPanel();
+                    } else {
+                        // 如果没有分类，默认选择第一个
+                        const firstTag = document.querySelector('.tag');
+                        if (firstTag) {
+                            firstTag.classList.add('selected');
+                            currentCategory = 'xiangtu';
+                            renderExamPanel();
+                        }
+                    }
                 }
-                
+            } else {
+                // 正常加载：默认选择：左侧为教学视频；选择第一个分类；年龄默认为幼儿园
+                setTimeout(() => {
+                    // 左侧菜单默认激活"教学视频"
+                    const firstMenu = document.querySelector('.menu-item');
+                    if (firstMenu) firstMenu.classList.add('active');
 
-            }, 100);
+                    // 选择第一个分类
+                    const firstTag = document.querySelector('.tag');
+                    if (firstTag) {
+                        firstTag.classList.add('selected');
+                        currentCategory = 'xiangtu';
+                    }
+                    
+                    // 年龄不再显示，但逻辑默认幼儿园
+                    currentAge = 'kindergarten';
+                    
+                    // 加载默认视频
+                    if (currentCategory && currentAge) {
+                        loadVideos(currentCategory, currentAge);
+                    }
+                }, 100);
+            }
         };
 
 
