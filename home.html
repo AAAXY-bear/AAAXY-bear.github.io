@@ -478,8 +478,7 @@
                 }
             } else {
                 // 课堂检测或课后反馈：清空内容，只显示背景
-                // 同时清除分类标签的选中状态
-                document.querySelectorAll('.tag').forEach(tag => tag.classList.remove('selected'));
+                // 保持分类标签的选中状态不变
                 renderEmptyPanel();
             }
         }
