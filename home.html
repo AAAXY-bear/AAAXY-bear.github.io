@@ -387,9 +387,9 @@
 
     <!-- 左侧栏目 -->
     <div class="left-sidebar" id="leftSidebar">
-        <div class="menu-item active" onclick="switchPanel('video')">教学视频</div>
-        <div class="menu-item" onclick="switchPanel('exam')">课堂检测</div>
-        <div class="menu-item" onclick="switchPanel('feedback')">课后反馈</div>
+        <div class="menu-item active" onclick="switchPanel('video', this)">教学视频</div>
+        <div class="menu-item" onclick="switchPanel('exam', this)">课堂检测</div>
+        <div class="menu-item" onclick="switchPanel('feedback', this)">课后反馈</div>
     </div>
 
     <!-- 视频展示区域 -->
@@ -453,12 +453,14 @@
             }
         }
 
-        function switchPanel(panel, event) {
+        function switchPanel(panel, element) {
             currentPanel = panel;
             // 更新左侧菜单激活态
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-            const clicked = event.currentTarget;
-            if (clicked) clicked.classList.add('active');
+            // 为被点击的菜单项添加 active 类
+            if (element) {
+                element.classList.add('active');
+            }
 
             if (currentPanel === 'video') {
                 // 视频面板：使用当前分类 + 默认幼儿园
@@ -541,14 +543,7 @@
                                 });
                                 examBtn.addEventListener('click', () => {
                                     const url = examUrl;
-                                    try {
-                                        const win = window.open(url, '_blank', 'noopener');
-                                        if (!win) {
-                                            window.location.href = url;
-                                        }
-                                    } catch (e) {
-                                        window.location.href = url;
-                                    }
+                                    window.location.href = url;
                                 });
                             });
                             return v;
@@ -576,14 +571,7 @@
                                 });
                                 examBtn.addEventListener('click', () => {
                                     const url = examUrl;
-                                    try {
-                                        const win = window.open(url, '_blank', 'noopener');
-                                        if (!win) {
-                                            window.location.href = url;
-                                        }
-                                    } catch (e) {
-                                        window.location.href = url;
-                                    }
+                                    window.location.href = url;
                                 });
                             });
                         }
@@ -643,14 +631,7 @@
                                 });
                                 examBtn.addEventListener('click', () => {
                                     const url = examUrl;
-                                    try {
-                                        const win = window.open(url, '_blank', 'noopener');
-                                        if (!win) {
-                                            window.location.href = url;
-                                        }
-                                    } catch (e) {
-                                        window.location.href = url;
-                                    }
+                                    window.location.href = url;
                                 });
                             });
                             return v;
@@ -678,14 +659,7 @@
                                 });
                                 examBtn.addEventListener('click', () => {
                                     const url = examUrl;
-                                    try {
-                                        const win = window.open(url, '_blank', 'noopener');
-                                        if (!win) {
-                                            window.location.href = url;
-                                        }
-                                    } catch (e) {
-                                        window.location.href = url;
-                                    }
+                                    window.location.href = url;
                                 });
                             });
                         }
