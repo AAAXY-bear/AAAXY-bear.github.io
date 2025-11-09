@@ -183,6 +183,44 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
+        /* 课堂检测按钮样式 */
+        .exam-button {
+            background: rgba(200, 230, 201, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(129, 199, 132, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 1.1em;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        .exam-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: white;
+            border-color: rgba(76, 175, 80, 0.8);
+        }
+
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            padding: 20px;
+        }
+
         .video-info {
             padding: 20px;
         }
@@ -444,11 +482,18 @@
             });
             event.currentTarget.classList.add('selected');
             
-            // 面板逻辑：教学视频默认使用“幼儿园”
-            currentAge = 'kindergarten';
-            if (currentPanel === 'video' && currentCategory && currentAge) {
-                loadVideos(currentCategory, currentAge);
+            // 根据当前面板类型更新内容
+            if (currentPanel === 'video') {
+                // 教学视频面板：使用"幼儿园"
+                currentAge = 'kindergarten';
+                if (currentCategory && currentAge) {
+                    loadVideos(currentCategory, currentAge);
+                }
+            } else if (currentPanel === 'exam') {
+                // 课堂检测面板：更新测试链接
+                renderExamPanel();
             } else {
+                // 其他面板：清空内容
                 renderEmptyPanel();
             }
         }
@@ -476,9 +521,14 @@
                         loadVideos(currentCategory, 'kindergarten');
                     }
                 }
+            } else if (currentPanel === 'feedback') {
+                // 课后反馈：直接跳转到反馈问卷页面
+                window.location.href = 'https://v.wjx.cn/vm/YfpTWhN.aspx#';
+            } else if (currentPanel === 'exam') {
+                // 课堂检测：根据当前分类显示对应的测试链接
+                renderExamPanel();
             } else {
-                // 课堂检测或课后反馈：清空内容，只显示背景
-                // 保持分类标签的选中状态不变
+                // 其他情况：清空内容，只显示背景
                 renderEmptyPanel();
             }
         }
@@ -888,6 +938,52 @@
         function renderEmptyPanel() {
             const videoGrid = document.getElementById('videoGrid');
             videoGrid.innerHTML = ''; // 清空内容，只显示背景
+        }
+
+        function renderExamPanel() {
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = ''; // 清空现有内容
+
+            // 根据当前分类获取对应的测试链接
+            let examLinks = [];
+            if (currentCategory === 'xiangtu') {
+                // 乡土印记的四个测试链接
+                examLinks = [
+                    { title: '春节的由来', url: videoExamUrlMap['a1_1.mp4'] },
+                    { title: '万春奶奶', url: videoExamUrlMap['a1_2.mp4'] },
+                    { title: '放鞭炮', url: videoExamUrlMap['a1_3.mp4'] },
+                    { title: '包包子', url: videoExamUrlMap['a1_4.mp4'] }
+                ];
+            } else if (currentCategory === 'shiwu') {
+                // 识物知理的四个测试链接
+                examLinks = [
+                    { title: '树叶变色记——秋日田园"化妆"秀', url: videoExamUrlMap['b1_1.mp4'] },
+                    { title: '萤火虫点灯——夜访乡村小"星"空', url: videoExamUrlMap['b1_2.mp4'] },
+                    { title: '种子去旅行——看植物宝宝的"飞天"绝技', url: videoExamUrlMap['b1_3.mp4'] },
+                    { title: '蛙声一片——池塘边的"夏日音乐会"', url: videoExamUrlMap['b1_4.mp4'] }
+                ];
+            } else {
+                // 如果没有选中分类，显示提示
+                videoGrid.innerHTML = '<div style="text-align: center; color: #666; font-size: 1.2em; padding: 40px;">请先选择一个分类（乡土印记或识物知理）</div>';
+                return;
+            }
+
+            // 创建按钮容器
+            const examContainer = document.createElement('div');
+            examContainer.className = 'exam-grid';
+
+            // 为每个测试链接创建按钮
+            examLinks.forEach((exam, index) => {
+                const examButton = document.createElement('div');
+                examButton.className = 'exam-button';
+                examButton.textContent = exam.title;
+                examButton.addEventListener('click', () => {
+                    window.location.href = exam.url;
+                });
+                examContainer.appendChild(examButton);
+            });
+
+            videoGrid.appendChild(examContainer);
         }
 
         // 已移除漂浮logo动画，改为背景平铺
